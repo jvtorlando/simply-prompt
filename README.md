@@ -6,7 +6,7 @@ Simply Prompt é uma landing page com um catálogo de prompts interativos para t
 
 O produto principal é o **Personal IA**, que gera um prompt de treino para perder gordura, ganhar massa muscular, melhorar o condicionamento, desenvolver explosão e performance atlética ou montar uma rotina geral de academia.
 
-> **Aplicação:** _deploy pendente — a URL da Vercel será registrada aqui._
+> **Aplicação:** https://p0-green.vercel.app
 
 ## Screenshot
 
