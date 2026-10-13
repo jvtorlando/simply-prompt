@@ -7,7 +7,6 @@ import { FieldShell, controlClass } from "@/components/form-controls"
 import { FitnessForm, fitnessFieldId } from "@/components/fitness-form"
 import { PromptOutput } from "@/components/prompt-output"
 import { TemplateForm, templateFieldId } from "@/components/template-form"
-import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Textarea } from "@/components/ui/textarea"
@@ -95,7 +94,7 @@ function focusFirst(ids: string[]) {
 function TwoColumns({ form, output }: { form: ReactNode; output: ReactNode }) {
   return (
     <div className="grid gap-6 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)] lg:gap-8">
-      <div className="min-w-0 rounded-3xl border border-border bg-background/60 p-5 sm:p-7">{form}</div>
+      <div className="min-w-0 lg:pr-4">{form}</div>
       <div className="min-w-0 lg:sticky lg:top-20 lg:self-start">{output}</div>
     </div>
   )
@@ -366,29 +365,24 @@ export function PromptBuilder({
   const isFitness = !template
 
   return (
-    <section id="criar" aria-labelledby="criar-titulo" className="scroll-mt-16 border-t border-border/70 bg-card/40 py-20 sm:py-24">
+    <section id="criar" aria-labelledby="criar-titulo" className="scroll-mt-16 border-y border-foreground bg-card/50 py-20 sm:py-28">
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
         <div className="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
           <div className="max-w-2xl">
-            <p className="font-mono text-xs font-medium tracking-[0.16em] text-brand-rust uppercase">Construtor de prompt</p>
-            <div className="mt-3 flex flex-wrap items-center gap-3">
-              <h2
-                id="criar-titulo"
-                ref={headingRef}
-                tabIndex={-1}
-                className="rounded-md text-3xl font-semibold tracking-[-0.03em] outline-none focus-visible:ring-3 focus-visible:ring-ring/50 sm:text-4xl"
-              >
-                {isFitness ? "Personal IA" : template.title}
-              </h2>
-              {isFitness ? (
-                <Badge className="h-6 bg-brand-coral-soft px-2.5 text-brand-rust">Principal</Badge>
-              ) : (
-                <Badge variant="outline" className="h-6 px-2.5">
-                  Experimental
-                </Badge>
-              )}
-            </div>
-            <p className="mt-4 text-base leading-relaxed text-pretty text-muted-foreground sm:text-lg">
+            <p className="font-mono text-xs text-muted-foreground">
+              <span className="text-brand-rust">03</span> / Criar prompt
+              <span aria-hidden="true"> · </span>
+              {isFitness ? "principal" : "experimental"}
+            </p>
+            <h2
+              id="criar-titulo"
+              ref={headingRef}
+              tabIndex={-1}
+              className="mt-3 rounded-md text-4xl font-semibold tracking-[-0.04em] outline-none focus-visible:ring-3 focus-visible:ring-ring/50 sm:text-5xl"
+            >
+              {isFitness ? "Personal IA" : template.title}
+            </h2>
+            <p className="mt-4 max-w-xl text-base leading-relaxed text-pretty text-muted-foreground">
               {isFitness
                 ? "Gere um prompt de treino com seu objetivo, rotina, equipamentos e limitações, pronto para colar na sua IA."
                 : template.description}

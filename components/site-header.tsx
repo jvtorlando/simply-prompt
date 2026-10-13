@@ -2,6 +2,7 @@ import { Sparkles } from "lucide-react"
 
 import { MobileNav } from "@/components/mobile-nav"
 import { buttonVariants } from "@/components/ui/button"
+import NavHeader from "@/components/ui/nav-header"
 import { cn } from "@/lib/utils"
 
 export const NAV_LINKS = [
@@ -29,20 +30,9 @@ export function SiteHeader() {
           <BrandMark />
         </a>
 
-        <nav aria-label="Principal" className="hidden md:block">
-          <ul className="flex items-center gap-1">
-            {NAV_LINKS.map((link) => (
-              <li key={link.href}>
-                <a
-                  href={link.href}
-                  className="rounded-md px-3 py-2 text-sm text-muted-foreground transition-colors hover:text-foreground"
-                >
-                  {link.label}
-                </a>
-              </li>
-            ))}
-          </ul>
-        </nav>
+        <div className="hidden md:block">
+          <NavHeader links={NAV_LINKS} />
+        </div>
 
         <div className="flex items-center gap-2">
           <a href="#criar" className={cn(buttonVariants({ size: "lg" }), "hidden h-10 rounded-full px-4 sm:inline-flex")}>

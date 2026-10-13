@@ -1,10 +1,9 @@
 "use client"
 
 import { useEffect, useRef, useState } from "react"
-import { ArrowRight, Dumbbell, FlaskConical } from "lucide-react"
+import { ArrowRight } from "lucide-react"
 
 import { SectionHeading } from "@/components/section-heading"
-import { Badge } from "@/components/ui/badge"
 import GlassFolder, { type FolderFile } from "@/components/ui/glass-folder-cards"
 import { PROMPT_CATEGORIES } from "@/lib/prompt-catalog"
 import { cn } from "@/lib/utils"
@@ -52,17 +51,17 @@ function CategoryCard({ category, index, onSelect }: CategoryCardProps) {
     <li
       aria-labelledby={titleId}
       className={cn(
-        "flex min-w-0 flex-col overflow-hidden rounded-3xl border bg-card",
+        "flex min-w-0 flex-col",
         featured
-          ? "border-foreground/15 shadow-[0_30px_60px_-36px_rgba(28,26,23,0.45)] md:col-span-2 md:grid md:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]"
-          : "border-border",
+          ? "overflow-hidden rounded-2xl bg-brand-coral-soft/70 md:col-span-2 md:grid md:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:col-span-3"
+          : "border-t border-foreground pt-4",
       )}
     >
       <div
         ref={ref}
         className={cn(
           "dot-grid flex min-w-0 justify-center px-4 pt-12 pb-3",
-          featured ? "bg-brand-coral-soft/60 md:items-center md:py-8" : "bg-muted/40",
+          featured && "md:items-center md:py-10",
         )}
       >
         <GlassFolder
@@ -79,35 +78,30 @@ function CategoryCard({ category, index, onSelect }: CategoryCardProps) {
         />
       </div>
 
-      <div className="flex flex-1 flex-col gap-4 p-5 sm:p-6">
-        <div className="flex flex-wrap items-center gap-2">
-          <h3 id={titleId} className="text-xl font-semibold tracking-tight">
+      <div className={cn("flex flex-1 flex-col gap-4", featured ? "p-6 sm:p-10" : "pt-2")}>
+        <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
+          <h3
+            id={titleId}
+            className={cn("font-semibold tracking-tight", featured ? "text-4xl tracking-[-0.035em]" : "text-xl")}
+          >
             {category.title}
           </h3>
-          {featured ? (
-            <Badge className="h-6 gap-1 bg-foreground px-2.5 text-background">
-              <Dumbbell aria-hidden="true" />
-              Personal IA
-            </Badge>
-          ) : (
-            <Badge variant="outline" className="h-6 gap-1 px-2.5">
-              <FlaskConical aria-hidden="true" />
-              Experimental
-            </Badge>
-          )}
+          <span className="font-mono text-xs text-muted-foreground">
+            {featured ? "Personal IA" : "experimental"}
+          </span>
         </div>
-        <p className="text-sm leading-relaxed text-muted-foreground">{category.description}</p>
-        <ul className="mt-auto flex flex-col gap-2" aria-label={`Prompts de ${category.title}`}>
+        <p className="max-w-md text-sm leading-relaxed text-muted-foreground">{category.description}</p>
+        <ul className="mt-auto" aria-label={`Prompts de ${category.title}`}>
           {category.items.map((item) => (
-            <li key={item.id}>
+            <li key={item.id} className="border-b border-foreground/15 first:border-t">
               <button
                 type="button"
                 onClick={() => onSelect(item)}
-                className="group flex min-h-11 w-full items-center justify-between gap-3 rounded-xl border border-border bg-background px-3.5 py-2 text-left text-sm font-medium transition-colors hover:border-foreground/30 hover:bg-muted/60"
+                className="group flex min-h-11 w-full items-center justify-between gap-3 py-2 text-left text-sm font-medium transition-colors hover:text-brand-rust"
               >
                 {item.title}
                 <ArrowRight
-                  className="size-4 shrink-0 text-muted-foreground transition-transform group-hover:translate-x-0.5"
+                  className="size-4 shrink-0 text-muted-foreground transition-transform group-hover:translate-x-0.5 group-hover:text-brand-rust"
                   aria-hidden="true"
                 />
               </button>
@@ -121,15 +115,16 @@ function CategoryCard({ category, index, onSelect }: CategoryCardProps) {
 
 export function PromptCatalog({ onSelect }: { onSelect: (item: CatalogItem) => void }) {
   return (
-    <section id="catalogo" aria-labelledby="catalogo-titulo" className="border-t border-border/70 py-20 sm:py-24">
+    <section id="catalogo" aria-labelledby="catalogo-titulo" className="py-20 sm:py-28">
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
         <SectionHeading
           id="catalogo-titulo"
-          eyebrow="Catálogo"
-          title="Uma pasta para cada parte da sua rotina."
-          description="Toque em uma pasta para abri-la e escolha um prompt, ou use a lista de cada categoria. O Personal IA está completo; as demais categorias são modelos experimentais, já utilizáveis."
+          number="02"
+          label="Catálogo"
+          title="Uma pasta para cada parte da rotina."
+          description="Abra uma pasta e escolha um arquivo. Fitness está completo; o resto é experimental, mas já funciona."
         />
-        <ul className="mt-12 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+        <ul className="mt-12 grid gap-x-8 gap-y-14 md:grid-cols-2 lg:grid-cols-3">
           {PROMPT_CATEGORIES.map((category, i) => (
             <CategoryCard key={category.id} category={category} index={i} onSelect={onSelect} />
           ))}

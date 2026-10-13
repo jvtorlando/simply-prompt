@@ -30,14 +30,16 @@ const FAQ = [
 
 export function FaqSection() {
   return (
-    <section id="faq" aria-labelledby="faq-titulo" className="border-t border-border/70 py-20 sm:py-24">
-      <div className="mx-auto grid max-w-6xl gap-10 px-4 sm:px-6 lg:grid-cols-[0.8fr_1.2fr]">
-        <SectionHeading id="faq-titulo" eyebrow="Perguntas frequentes" title="O que você talvez queira saber." />
-        <Accordion className="rounded-3xl border border-border bg-card px-5 sm:px-6">
+    <section id="faq" aria-labelledby="faq-titulo" className="py-20 sm:py-28">
+      <div className="mx-auto max-w-6xl px-4 sm:px-6">
+        <SectionHeading id="faq-titulo" number="05" label="Perguntas" title="Perguntas frequentes" />
+        <Accordion className="mt-8 lg:pl-48">
           {FAQ.map((item) => (
             <AccordionItem key={item.q} value={item.q} className="border-border">
               <AccordionTrigger className="py-5 text-base font-medium hover:no-underline">{item.q}</AccordionTrigger>
-              <AccordionContent className="pb-5 text-[15px] leading-relaxed text-muted-foreground">{item.a}</AccordionContent>
+              <AccordionContent className="max-w-2xl pb-5 text-[15px] leading-relaxed text-muted-foreground">
+                {item.a}
+              </AccordionContent>
             </AccordionItem>
           ))}
         </Accordion>
