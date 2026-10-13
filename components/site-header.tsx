@@ -1,4 +1,4 @@
-import { Sparkles } from "lucide-react"
+import Image from "next/image"
 
 import { MobileNav } from "@/components/mobile-nav"
 import { buttonVariants } from "@/components/ui/button"
@@ -14,9 +14,7 @@ export const NAV_LINKS = [
 export function BrandMark({ className }: { className?: string }) {
   return (
     <span className={cn("inline-flex items-center gap-2 font-semibold tracking-tight", className)}>
-      <span className="grid size-7 place-items-center rounded-lg bg-foreground text-background" aria-hidden="true">
-        <Sparkles className="size-4" strokeWidth={2.2} />
-      </span>
+      <Image src="/logo-sp.png" alt="" width={28} height={28} className="size-7" priority />
       Simply Prompt
     </span>
   )
