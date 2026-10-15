@@ -33,13 +33,31 @@ function formatAnswer(label: string, kind: string, value: string): string {
   return `- ${label}: ${text}`
 }
 
+/** Troca {idioma} pelo idioma escolhido (ou por um termo genérico) em todos os textos do modelo. */
+function withLanguage(template: PromptTemplate, language: string | undefined): PromptTemplate {
+  const name = language ? language.toLowerCase() : "idioma estrangeiro"
+  const fill = (text: string) => text.replaceAll("{idioma}", name)
+  const fillAll = (items: string[]) => items.map(fill)
+  return {
+    ...template,
+    role: fill(template.role),
+    objective: fill(template.objective),
+    method: fillAll(template.method),
+    rules: fillAll(template.rules),
+    outputFormat: fillAll(template.outputFormat),
+    checks: fillAll(template.checks),
+    clarify: fillAll(template.clarify),
+  }
+}
+
 export type TemplatePromptResult = { prompt: string; adjustments: TextAdjustment[] }
 
 /**
  * Monta o prompt de um modelo guiado. Respostas digitadas passam pelo corretor de português;
  * textos colados (vaga, currículo, texto em inglês) entram exatamente como vieram.
  */
-export function buildTemplatePromptDetailed(template: PromptTemplate, values: TemplateValues): TemplatePromptResult {
+export function buildTemplatePromptDetailed(source: PromptTemplate, values: TemplateValues): TemplatePromptResult {
+  const template = withLanguage(source, values.idioma)
   const adjustments: TextAdjustment[] = []
   const answers = template.fields
     .map((field) => {
@@ -90,7 +108,8 @@ export const buildTemplatePrompt = (template: PromptTemplate, values: TemplateVa
   buildTemplatePromptDetailed(template, values).prompt
 
 /** Versão "deixar a IA perguntar" de um modelo guiado. */
-export function buildTemplateInterviewPrompt(template: PromptTemplate): string {
+export function buildTemplateInterviewPrompt(source: PromptTemplate): string {
+  const template = withLanguage(source, undefined)
   const questions = template.fields.map((f) => `${f.label}${f.required ? "" : " (opcional)"}`)
   return `# ${template.title} — entrevista antes da resposta
 

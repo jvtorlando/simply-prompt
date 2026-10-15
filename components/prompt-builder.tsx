@@ -396,7 +396,7 @@ export function PromptBuilder({
         </div>
 
         <Tabs value={tab} onValueChange={(v) => setTab(v as Tab)} className="mt-10 gap-6">
-          <TabsList variant="line" className="glass h-auto! w-full justify-start gap-0 rounded-full p-1 sm:w-fit">
+          <TabsList variant="line" className="glass h-auto! w-full justify-start gap-0 rounded-full p-1 data-[variant=line]:rounded-full sm:w-fit">
             {TAB_ITEMS.map((item) => (
               <TabsTrigger
                 key={item.value}

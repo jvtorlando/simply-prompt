@@ -5,7 +5,7 @@ import type { PromptTemplate, TemplateField } from "@/types/prompt"
  * tarefa, formato de saída, restrições, passos de raciocínio, material de referência e verificação)
  * e métodos consagrados de cada área: prática de recuperação e revisão espaçada nos estudos,
  * STAR e roteiro de system design em entrevistas, palavras-chave da vaga e formato simples para ATS,
- * níveis do CEFR e correção que não interrompe a conversa em inglês, e intenções "se-então" no planejamento.
+ * níveis do CEFR e correção que não interrompe a conversa em outro idioma, e intenções "se-então" no planejamento.
  */
 
 const opts = (...labels: string[]) => labels.map((label) => ({ value: label, label }))
@@ -26,9 +26,17 @@ const timePerDay: TemplateField = {
   options: opts("15 minutos", "30 minutos", "1 hora", "2 horas", "3 horas ou mais"),
 }
 
+const language: TemplateField = {
+  id: "idioma",
+  label: "Idioma",
+  kind: "select",
+  required: true,
+  options: opts("Inglês", "Espanhol", "Francês", "Italiano", "Alemão", "Japonês", "Mandarim"),
+}
+
 const cefr: TemplateField = {
   id: "nivel",
-  label: "Nível de inglês",
+  label: "Nível no idioma",
   kind: "select",
   required: true,
   hint: "Se não souber, escolha a opção mais próxima. A IA confirma com algumas perguntas.",
@@ -387,15 +395,16 @@ export const PROMPT_TEMPLATES: PromptTemplate[] = [
     clarify: ["horários que não podem mudar", "o que já funciona hoje"],
   },
 
-  // ------------------------------------------------------------------ Inglês
+  // ------------------------------------------------------------------ Línguas
   {
     id: "professor-de-ingles",
     categoryId: "ingles",
     title: "Professor particular",
     description: "Aulas no seu nível, no tema que você gosta, no tempo que você tem.",
-    role: "um professor particular de inglês, paciente e didático, que ensina de forma comunicativa e usa o CEFR como referência de nível",
-    objective: "Ser meu professor de inglês e montar aulas curtas, práticas e progressivas para mim.",
+    role: "um professor particular de {idioma}, paciente e didático, que ensina de forma comunicativa e usa o CEFR como referência de nível",
+    objective: "Ser meu professor de {idioma} e montar aulas curtas, práticas e progressivas para mim.",
     fields: [
+      language,
       cefr,
       { id: "objetivo", label: "Objetivo", kind: "text", required: true, placeholder: "Ex.: entrevistas, viagens, trabalho" },
       { id: "tema", label: "Tema de interesse", kind: "text", required: true, placeholder: "Ex.: tecnologia, futebol, séries" },
@@ -404,14 +413,14 @@ export const PROMPT_TEMPLATES: PromptTemplate[] = [
       { id: "foco", label: "Foco", kind: "select", required: true, options: opts("Conversação", "Escrita", "Gramática", "Vocabulário") },
     ],
     method: [
-      "Confirme meu nível com até três perguntas curtas em inglês antes de começar.",
+      "Confirme meu nível com até três perguntas curtas em {idioma} antes de começar.",
       "Defina para cada semana um objetivo do tipo \"consigo…\" (por exemplo, \"consigo pedir e dar opinião sobre…\").",
       "Estruture cada aula em: aquecimento, texto ou diálogo um pouco acima do meu nível, prática com produção minha, feedback e uma mini tarefa.",
       "Ensine vocabulário em blocos e colocações (palavras que andam juntas), não palavras soltas, e revise-o de forma espaçada.",
       "Corrija primeiro os erros que atrapalham a comunicação, com no máximo três correções por turno.",
     ],
     rules: [
-      "Fale comigo em inglês no meu nível e use português só para explicar erros e regras.",
+      "Fale comigo em {idioma} no meu nível e use português só para explicar erros e regras.",
       "Corrija com gentileza: mostre a forma correta e o motivo.",
       "Termine cada aula com uma tarefa curta.",
     ],
@@ -429,10 +438,11 @@ export const PROMPT_TEMPLATES: PromptTemplate[] = [
     id: "conversacao-ingles",
     categoryId: "ingles",
     title: "Conversação",
-    description: "Prática de conversa em inglês, com correção que não interrompe o fluxo.",
-    role: "um parceiro de conversação em inglês que mantém o diálogo natural e corrige com cuidado",
-    objective: "Conversar comigo em inglês sobre o cenário escolhido e me ajudar a falar com mais naturalidade.",
+    description: "Prática de conversa, com correção que não interrompe o fluxo.",
+    role: "um parceiro de conversação em {idioma} que mantém o diálogo natural e corrige com cuidado",
+    objective: "Conversar comigo em {idioma} sobre o cenário escolhido e me ajudar a falar com mais naturalidade.",
     fields: [
+      language,
       cefr,
       { id: "tema", label: "Tema ou cenário", kind: "text", required: true, placeholder: "Ex.: entrevista de emprego, viagem a Londres" },
       { id: "objetivo", label: "Objetivo", kind: "select", options: opts("Ganhar fluência", "Entrevista de emprego", "Viagem", "Trabalho", "Prova de proficiência") },
@@ -440,7 +450,7 @@ export const PROMPT_TEMPLATES: PromptTemplate[] = [
       { id: "dificuldade", label: "O que mais trava na hora de falar", kind: "textarea" },
     ],
     method: [
-      "Assuma o papel do cenário e conduza a conversa em inglês, no meu nível, com perguntas abertas, uma por vez.",
+      "Assuma o papel do cenário e conduza a conversa em {idioma}, no meu nível, com perguntas abertas, uma por vez.",
       "Se eu escolher correção natural, repita a minha frase de forma correta no meio da resposta, sem interromper.",
       "Se eu escolher correção no final, a cada três ou quatro trocas liste as três correções mais importantes com explicação curta em português.",
       "Se eu travar, ofereça duas ou três expressões úteis para continuar.",
@@ -449,7 +459,7 @@ export const PROMPT_TEMPLATES: PromptTemplate[] = [
     rules: ["Não corrija tudo de uma vez; priorize o que atrapalha o entendimento.", "Elogie o que eu acertar."],
     outputFormat: [
       "Abertura da conversa no cenário escolhido",
-      "Perguntas uma por vez, em inglês",
+      "Perguntas uma por vez, em {idioma}",
       "Correções conforme a minha preferência",
       "Expressões úteis do tema",
       "Resumo final com meus três pontos para treinar",
@@ -461,12 +471,13 @@ export const PROMPT_TEMPLATES: PromptTemplate[] = [
     id: "correcao-de-escrita",
     categoryId: "ingles",
     title: "Correção de escrita",
-    description: "Correção comentada de um texto seu em inglês, sem perder a sua voz.",
-    role: "um revisor de textos em inglês e professor de escrita",
-    objective: "Corrigir meu texto em inglês, explicar as correções e me ajudar a escrever melhor da próxima vez.",
+    description: "Correção comentada de um texto seu, sem perder a sua voz.",
+    role: "um revisor de textos em {idioma} e professor de escrita",
+    objective: "Corrigir meu texto em {idioma}, explicar as correções e me ajudar a escrever melhor da próxima vez.",
     fields: [
+      language,
       cefr,
-      { id: "texto", raw: true, label: "Texto em inglês", kind: "textarea", required: true },
+      { id: "texto", raw: true, label: "Texto no idioma", kind: "textarea", required: true },
       { id: "tipo", label: "Tipo de texto", kind: "text", placeholder: "Ex.: e-mail formal, redação, mensagem" },
       { id: "tom", label: "Tom desejado", kind: "select", options: opts("Formal", "Neutro", "Informal") },
       {

@@ -3,7 +3,7 @@ import { Reveal } from "@/components/reveal"
 const STEPS = [
   {
     title: "Escolha uma tarefa",
-    text: "Treino, estudos, carreira, inglês ou produtividade. Cada modelo já sabe o que perguntar.",
+    text: "Treino, estudos, carreira, línguas ou produtividade. Cada modelo já sabe o que perguntar.",
   },
   {
     title: "Responda o essencial",

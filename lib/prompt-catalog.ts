@@ -57,8 +57,8 @@ export const PROMPT_CATEGORIES: PromptCategory[] = [
   },
   {
     id: "ingles",
-    title: "Inglês",
-    description: "Professor, conversação e correção de escrita.",
+    title: "Línguas",
+    description: "Professor, conversação e correção de escrita no idioma que você está aprendendo.",
     art: "aurora",
     seed: 3,
     items: [
