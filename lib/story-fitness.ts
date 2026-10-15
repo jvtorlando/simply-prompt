@@ -8,6 +8,7 @@
  */
 
 import { GOAL_OPTIONS, LOCATION_OPTIONS, labelOf } from "./fitness-options"
+import { ROUTINE_STEPS } from "./fitness-routine"
 import { detectHealthSignals, normalizeFreeText, type TextAdjustment } from "./text-intelligence"
 import type { FitnessGoal, TrainingLocation } from "../types/prompt"
 
@@ -459,6 +460,7 @@ export function buildStoryFitnessPrompt(profile: StoryProfile, answers: StoryAns
       `## Alimentação\n${food}`,
       `## Registro e ajustes\n${log}`,
       others.length ? `## Outros detalhes que contei\n${others.map((o) => `- ${o}`).join("\n")}` : null,
+      `## Agenda, PDF e acompanhamento\n${bullets([...ROUTINE_STEPS])}`,
       `## Segurança\n${safety}`,
       "## Comunicação\nResponda em português do Brasil, de forma direta e prática. Pergunte só o que muda o plano.",
     ]

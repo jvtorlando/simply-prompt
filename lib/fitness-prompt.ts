@@ -10,6 +10,7 @@ import {
   SLEEP_OPTIONS,
   labelOf,
 } from "@/lib/fitness-options"
+import { ROUTINE_STEPS } from "@/lib/fitness-routine"
 import { bulletList, numberedList } from "@/lib/prompt-utils"
 import {
   detectHealthSignals,
@@ -314,6 +315,7 @@ Organize a resposta nesta ordem, usando títulos e tabelas:
 9. Semana de recuperação (deload), quando necessária, e como identificá-la
 10. Sinais de alerta
 11. Método de acompanhamento por quatro semanas
+12. Versão do plano em PDF, pronta para baixar
 
 ## 8. Critérios para progressão
 - Defina critérios objetivos para aumentar carga, repetições ou volume (por exemplo: completar todas as séries no topo da faixa de repetições com o RIR alvo).
@@ -330,7 +332,10 @@ Organize a resposta nesta ordem, usando títulos e tabelas:
 - Não prometa resultados garantidos nem prazos exatos para mudanças no corpo.
 
 ## 10. Perguntas de acompanhamento
-${followUps}`
+${followUps}
+
+Agenda, PDF e acompanhamento:
+${bulletList([...ROUTINE_STEPS])}`
 
   return { prompt, adjustments, attention }
 }
