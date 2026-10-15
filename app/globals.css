@@ -144,8 +144,12 @@
     scroll-padding-top: 5rem;
     -webkit-text-size-adjust: 100%;
   }
+  html {
+    background: var(--background);
+  }
   body {
     overflow-x: clip;
+    background: transparent;
   }
   h1, h2, h3 {
     font-family: var(--font-heading);
@@ -184,4 +188,91 @@
 }
 @media (prefers-reduced-motion: reduce) {
   .sp-swap { animation: none; }
+}
+
+/* ---- fundo ambiente ---------------------------------------------------- */
+.sp-orb {
+  position: absolute;
+  border-radius: 9999px;
+  will-change: transform;
+}
+.sp-orb-a {
+  top: -18vmax;
+  left: -14vmax;
+  width: 60vmax;
+  height: 60vmax;
+  background: radial-gradient(closest-side, oklch(0.8 0.13 40 / 0.55), transparent);
+  animation: sp-drift-a 26s ease-in-out infinite;
+}
+.sp-orb-b {
+  top: 8vmax;
+  right: -22vmax;
+  width: 64vmax;
+  height: 64vmax;
+  background: radial-gradient(closest-side, oklch(0.84 0.08 235 / 0.5), transparent);
+  animation: sp-drift-b 32s ease-in-out infinite;
+}
+.sp-orb-c {
+  bottom: -26vmax;
+  left: 18vmax;
+  width: 58vmax;
+  height: 58vmax;
+  background: radial-gradient(closest-side, oklch(0.9 0.09 85 / 0.55), transparent);
+  animation: sp-drift-a 38s ease-in-out infinite reverse;
+}
+@keyframes sp-drift-a {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+  50% { transform: translate3d(7vmax, 5vmax, 0) scale(1.14); }
+}
+@keyframes sp-drift-b {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+  50% { transform: translate3d(-8vmax, 6vmax, 0) scale(0.92); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .sp-orb { animation: none; }
+}
+
+/* ---- liquid glass ------------------------------------------------------- */
+/* Vidro: desfoque forte com saturação, borda de luz, brilho especular no topo e sombra de profundidade. */
+.glass {
+  position: relative;
+  isolation: isolate;
+  background:
+    linear-gradient(135deg, oklch(1 0 0 / 0.68), oklch(1 0 0 / 0.3)),
+    oklch(0.99 0.005 85 / 0.2);
+  -webkit-backdrop-filter: blur(24px) saturate(1.9);
+  backdrop-filter: blur(24px) saturate(1.9);
+  border: 1px solid oklch(1 0 0 / 0.75);
+  box-shadow:
+    inset 0 1px 0 oklch(1 0 0 / 0.95),
+    inset 0 -1px 0 oklch(0.2 0 0 / 0.05),
+    0 1px 2px oklch(0.2 0.01 60 / 0.06),
+    0 24px 48px -24px oklch(0.2 0.02 50 / 0.3);
+}
+.glass::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  pointer-events: none;
+  background: linear-gradient(180deg, oklch(1 0 0 / 0.55), oklch(1 0 0 / 0) 42%);
+}
+.glass-bar {
+  background: oklch(0.99 0.004 85 / 0.55);
+  -webkit-backdrop-filter: blur(22px) saturate(1.9);
+  backdrop-filter: blur(22px) saturate(1.9);
+  box-shadow: inset 0 -1px 0 oklch(1 0 0 / 0.7), 0 1px 0 oklch(0.2 0.01 60 / 0.06);
+}
+.btn-liquid {
+  box-shadow:
+    inset 0 1px 0 oklch(1 0 0 / 0.28),
+    inset 0 -2px 6px oklch(0 0 0 / 0.35),
+    0 12px 26px -12px oklch(0.2 0.02 50 / 0.6);
+  transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease, background-color 0.2s ease;
+}
+.btn-liquid:hover { transform: translateY(-2px); }
+.btn-liquid:active { transform: translateY(0) scale(0.97); }
+@media (prefers-reduced-motion: reduce) {
+  .btn-liquid, .btn-liquid:hover, .btn-liquid:active { transition: none; transform: none; }
 }

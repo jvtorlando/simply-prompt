@@ -1,6 +1,7 @@
 import { ArrowRight } from "lucide-react"
 
 import { HeroDemo } from "@/components/hero-demo"
+import { Reveal } from "@/components/reveal"
 import { buttonVariants } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 
@@ -13,21 +14,26 @@ export function HeroSection() {
       />
       <div className="relative mx-auto grid max-w-6xl grid-cols-[minmax(0,1fr)] items-end gap-14 px-4 pt-16 pb-24 sm:px-6 md:pt-24 lg:grid-cols-[minmax(0,1.25fr)_minmax(0,1fr)] lg:gap-16 lg:pb-32">
         <div>
+          <Reveal immediate y={30}>
           <h1 className="text-[2.75rem] leading-[0.98] font-semibold tracking-[-0.045em] text-balance sm:text-6xl lg:text-[5.25rem]">
             Seu próximo especialista começa com o prompt certo.
           </h1>
+          </Reveal>
+          <Reveal immediate delay={0.12}>
           <p className="mt-6 max-w-lg text-lg leading-relaxed text-pretty text-muted-foreground">
             Responda algumas perguntas e receba um prompt personalizado para criar seu Personal IA, tutor, mentor de
             carreira ou planejador.
           </p>
+          </Reveal>
+          <Reveal immediate delay={0.24}>
           <div className="mt-9 flex flex-col gap-3 sm:flex-row">
-            <a href="#criar" className={cn(buttonVariants({ size: "lg" }), "h-12 rounded-full px-6 text-base")}>
+            <a href="#criar" className={cn(buttonVariants({ size: "lg" }), "btn-liquid h-12 rounded-full px-6 text-base")}>
               Criar meu Personal IA
               <ArrowRight data-icon="inline-end" aria-hidden="true" />
             </a>
             <a
               href="#catalogo"
-              className={cn(buttonVariants({ variant: "outline", size: "lg" }), "h-12 rounded-full px-6 text-base")}
+              className={cn(buttonVariants({ variant: "outline", size: "lg" }), "glass h-12 rounded-full border-0 px-6 text-base")}
             >
               Explorar prompts
             </a>
@@ -35,8 +41,11 @@ export function HeroSection() {
           <p className="mt-6 text-sm text-muted-foreground">
             Gratuito, sem cadastro. Suas respostas ficam no seu navegador.
           </p>
+          </Reveal>
         </div>
-        <HeroDemo />
+        <Reveal immediate delay={0.2} y={40}>
+          <HeroDemo />
+        </Reveal>
       </div>
     </section>
   )

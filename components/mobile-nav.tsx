@@ -19,7 +19,7 @@ export function MobileNav({ links }: { links: readonly NavLink[] }) {
       >
         <Menu />
       </SheetTrigger>
-      <SheetContent side="right" className="w-[min(20rem,85vw)] overscroll-contain bg-background">
+      <SheetContent side="right" className="w-[min(20rem,85vw)] overscroll-contain bg-background/70 backdrop-blur-2xl backdrop-saturate-150">
         <SheetHeader className="border-b border-border px-5 pt-5">
           <SheetTitle>Menu</SheetTitle>
           <SheetDescription>Navegue pelas seções da página.</SheetDescription>
@@ -43,7 +43,7 @@ export function MobileNav({ links }: { links: readonly NavLink[] }) {
           <a
             href="#criar"
             onClick={() => setOpen(false)}
-            className={cn(buttonVariants({ size: "lg" }), "h-12 w-full rounded-full text-base")}
+            className={cn(buttonVariants({ size: "lg" }), "btn-liquid h-12 w-full rounded-full text-base")}
           >
             Criar meu prompt
           </a>

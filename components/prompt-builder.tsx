@@ -372,7 +372,7 @@ export function PromptBuilder({
   const isFitness = !template
 
   return (
-    <section id="criar" aria-labelledby="criar-titulo" className="scroll-mt-16 border-y border-foreground bg-card/50 py-20 sm:py-28">
+    <section id="criar" aria-labelledby="criar-titulo" className="scroll-mt-16 border-y border-foreground py-20 sm:py-28">
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
         <div className="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
           <div className="max-w-2xl">

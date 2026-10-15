@@ -1,3 +1,4 @@
+import { Reveal } from "@/components/reveal"
 import { SectionHeading, splitHeadingSticky, splitLayout } from "@/components/section-heading"
 
 const BENEFITS = [
@@ -27,13 +28,14 @@ export function BenefitsSection() {
   return (
     <section aria-labelledby="beneficios-titulo" className="py-20 sm:py-28">
       <div className={`mx-auto max-w-6xl px-4 sm:px-6 ${splitLayout}`}>
-        <SectionHeading
-          id="beneficios-titulo"
-          size="md"
-          className={splitHeadingSticky}
-          title="Um prompt melhor não garante uma resposta certa. Mas melhora o ponto de partida."
-        />
-        <div>
+        <Reveal className={splitHeadingSticky}>
+          <SectionHeading
+            id="beneficios-titulo"
+            size="md"
+            title="Um prompt melhor não garante uma resposta certa. Mas melhora o ponto de partida."
+          />
+        </Reveal>
+        <Reveal delay={0.1}>
           <dl>
             {BENEFITS.map((benefit) => (
               <div
@@ -48,7 +50,7 @@ export function BenefitsSection() {
           <p className="mt-6 border-t border-foreground pt-4 text-sm text-muted-foreground">
             Revise sempre o que a IA responder.
           </p>
-        </div>
+        </Reveal>
       </div>
     </section>
   )

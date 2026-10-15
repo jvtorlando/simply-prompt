@@ -22,7 +22,7 @@ export function BrandMark({ className }: { className?: string }) {
 
 export function SiteHeader() {
   return (
-    <header className="sticky top-0 z-40 border-b border-border/70 bg-background/80 backdrop-blur-md supports-backdrop-filter:bg-background/65">
+    <header className="glass-bar sticky top-0 z-40">
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-4 px-4 sm:px-6">
         <a href="#inicio" className="rounded-md" aria-label="Simply Prompt, voltar ao início">
           <BrandMark />
@@ -33,7 +33,7 @@ export function SiteHeader() {
         </div>
 
         <div className="flex items-center gap-2">
-          <a href="#criar" className={cn(buttonVariants({ size: "lg" }), "hidden h-10 rounded-full px-4 sm:inline-flex")}>
+          <a href="#criar" className={cn(buttonVariants({ size: "lg" }), "btn-liquid hidden h-10 rounded-full px-4 sm:inline-flex")}>
             Criar meu prompt
           </a>
           <MobileNav links={NAV_LINKS} />

@@ -23,7 +23,7 @@ export function HeroDemo() {
   const [first, second] = GOAL_FOCUS[goal]
 
   return (
-    <figure className="mx-auto w-full max-w-md" aria-label="Exemplo: o prompt muda conforme o objetivo">
+    <figure className="glass mx-auto w-full max-w-md rounded-[2rem] p-5 sm:p-6" aria-label="Exemplo: o prompt muda conforme o objetivo">
       <fieldset>
         <legend className="text-sm font-medium">Escolha um objetivo e veja o prompt mudar</legend>
         <div className="mt-3 flex flex-wrap gap-2">
@@ -31,7 +31,7 @@ export function HeroDemo() {
             <label
               key={option.value}
               className={cn(
-                "flex min-h-11 cursor-pointer items-center rounded-full border border-foreground/25 px-4 text-sm transition-colors select-none hover:border-foreground",
+                "flex min-h-11 cursor-pointer items-center rounded-full border border-foreground/20 bg-white/40 px-4 text-sm transition-[background-color,color,border-color,transform] duration-300 select-none hover:border-foreground active:scale-95",
                 "has-checked:border-foreground has-checked:bg-foreground has-checked:text-background has-focus-visible:ring-3 has-focus-visible:ring-ring/50",
               )}
             >
@@ -49,9 +49,9 @@ export function HeroDemo() {
         </div>
       </fieldset>
 
-      <dl className="mt-6 border-t border-foreground">
+      <dl className="mt-6 border-t border-foreground/80">
         {ANSWERS.map(([term, value]) => (
-          <div key={term} className="flex items-baseline justify-between gap-4 border-b border-border py-2 text-sm">
+          <div key={term} className="flex items-baseline justify-between gap-4 border-b border-foreground/10 py-2 text-sm">
             <dt className="text-muted-foreground">{term}</dt>
             <dd className="font-medium">{value}</dd>
           </div>
@@ -60,7 +60,7 @@ export function HeroDemo() {
 
       <div
         aria-live="polite"
-        className="mt-4 min-h-[16.5rem] rounded-xl bg-foreground p-4 font-mono text-[12px] leading-relaxed break-words whitespace-pre-wrap text-background/85 sm:min-h-[14.5rem]"
+        className="mt-4 min-h-[16.5rem] rounded-2xl bg-foreground p-4 shadow-[inset_0_1px_0_rgb(255_255_255/0.12),0_20px_40px_-20px_rgb(0_0_0/0.6)] font-mono text-[12px] leading-relaxed break-words whitespace-pre-wrap text-background/85 sm:min-h-[14.5rem]"
       >
         <div key={goal} className="sp-swap">
           <p className="font-semibold text-background">## 3. Objetivo principal</p>

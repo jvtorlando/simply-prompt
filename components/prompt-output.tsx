@@ -73,8 +73,8 @@ export function PromptOutput({ id, title, prompt, empty, onClear, clearDisabled 
   const titleId = `${id}-title`
 
   return (
-    <section aria-labelledby={titleId} className="flex min-w-0 flex-col rounded-3xl border border-border bg-card shadow-[0_24px_48px_-32px_rgba(28,26,23,0.35)]">
-      <div className="flex flex-wrap items-center justify-between gap-2 border-b border-border px-5 py-4">
+    <section aria-labelledby={titleId} className="glass flex min-w-0 flex-col rounded-3xl">
+      <div className="flex flex-wrap items-center justify-between gap-2 border-b border-foreground/10 px-5 py-4">
         <h3 id={titleId} className="text-base font-semibold tracking-tight">
           {title}
         </h3>
@@ -100,14 +100,14 @@ export function PromptOutput({ id, title, prompt, empty, onClear, clearDisabled 
         )}
       </div>
 
-      <div className="flex flex-col gap-3 border-t border-border px-4 py-4 sm:px-5">
+      <div className="flex flex-col gap-3 border-t border-foreground/10 px-4 py-4 sm:px-5">
         <div className="flex flex-col gap-2 sm:flex-row">
           <Button
             type="button"
             size="lg"
             onClick={handleCopy}
             disabled={!prompt}
-            className={cn("h-12 flex-1 rounded-full text-base", status === "copied" && "bg-brand-blue hover:bg-brand-blue")}
+            className={cn("btn-liquid h-12 flex-1 rounded-full text-base", status === "copied" && "bg-brand-blue hover:bg-brand-blue")}
           >
             {status === "copied" ? <Check aria-hidden="true" /> : <Copy aria-hidden="true" />}
             {status === "copied" ? "Prompt copiado" : "Copiar prompt"}
@@ -121,7 +121,7 @@ export function PromptOutput({ id, title, prompt, empty, onClear, clearDisabled 
               onClear()
             }}
             disabled={clearDisabled}
-            className="h-12 rounded-full px-5 text-base"
+            className="glass h-12 rounded-full px-5 text-base"
           >
             <RotateCcw aria-hidden="true" />
             Limpar respostas

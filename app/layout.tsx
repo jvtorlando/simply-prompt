@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next"
 import type { ReactNode } from "react"
 import { Bricolage_Grotesque, Geist_Mono, Instrument_Sans } from "next/font/google"
+import { AmbientBackground } from "@/components/ambient-background"
 import "./globals.css"
 
 // Títulos com personalidade, texto de leitura neutro e mono só para o texto do prompt.
@@ -56,7 +57,10 @@ export default function RootLayout({ children }: Readonly<{ children: ReactNode 
   return (
     <html lang="pt-BR" className={`${display.variable} ${text.variable} ${mono.variable} antialiased`}
       style={{ colorScheme: "light" }}>
-      <body className="min-h-dvh bg-background text-foreground">{children}</body>
+      <body className="min-h-dvh text-foreground">
+        <AmbientBackground />
+        {children}
+      </body>
     </html>
   )
 }

@@ -519,6 +519,18 @@ const FRONT_PATH =
   (FRONT_H - 22) +
   "Z"
 
+/**
+ * The same outline as FRONT_PATH, as a mask. `clip-path` does not cut a
+ * `backdrop-filter` at the rounded corners in every browser, so the blurred
+ * artwork showed through as a square behind them; a mask clips it too.
+ */
+const FRONT_MASK =
+  "url(\"data:image/svg+xml," +
+  encodeURIComponent(
+    "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 " + W + " " + FRONT_H + "'><path d='" + FRONT_PATH + "'/></svg>",
+  ) +
+  "\")"
+
 const MAX_VISIBLE = 4
 
 const SAMPLE_FILES: FolderFile[] = [
@@ -741,7 +753,15 @@ export default function GlassFolder({
           <div
             key={bump}
             className={"gf-front" + (bump ? " gf-front--bump" : "")}
-            style={{ clipPath: "path('" + FRONT_PATH + "')" }}
+            style={{
+              clipPath: "path('" + FRONT_PATH + "')",
+              WebkitMaskImage: FRONT_MASK,
+              maskImage: FRONT_MASK,
+              WebkitMaskSize: "100% 100%",
+              maskSize: "100% 100%",
+              WebkitMaskRepeat: "no-repeat",
+              maskRepeat: "no-repeat",
+            }}
           >
             <div className="gf-tint" aria-hidden="true" />
             <div className="gf-spec" aria-hidden="true" />

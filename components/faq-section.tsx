@@ -1,3 +1,4 @@
+import { Reveal } from "@/components/reveal"
 import { SectionHeading, splitHeadingSticky, splitLayout } from "@/components/section-heading"
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
 
@@ -32,7 +33,10 @@ export function FaqSection() {
   return (
     <section id="faq" aria-labelledby="faq-titulo" className="py-20 sm:py-28">
       <div className={`mx-auto max-w-6xl px-4 sm:px-6 ${splitLayout}`}>
-        <SectionHeading id="faq-titulo" size="md" className={splitHeadingSticky} title="Perguntas frequentes" />
+        <Reveal className={splitHeadingSticky}>
+          <SectionHeading id="faq-titulo" size="md" title="Perguntas frequentes" />
+        </Reveal>
+        <Reveal delay={0.1}>
         <Accordion>
           {FAQ.map((item) => (
             <AccordionItem key={item.q} value={item.q} className="border-foreground/15 first:border-t-0">
@@ -43,6 +47,7 @@ export function FaqSection() {
             </AccordionItem>
           ))}
         </Accordion>
+        </Reveal>
       </div>
     </section>
   )

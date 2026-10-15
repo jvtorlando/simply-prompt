@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react"
 import { ArrowRight } from "lucide-react"
 
+import { Reveal } from "@/components/reveal"
 import { SectionHeading } from "@/components/section-heading"
 import GlassFolder, { type FolderFile } from "@/components/ui/glass-folder-cards"
 import { PROMPT_CATEGORIES } from "@/lib/prompt-catalog"
@@ -47,18 +48,45 @@ function CategoryCard({ category, index, onSelect }: CategoryCardProps) {
   const files: FolderFile[] = category.items.map((item) => ({ name: item.title, meta: item.meta }))
   const titleId = `categoria-${category.id}`
 
+  // O leque abre ao passar o mouse. No toque e no teclado continua abrindo por clique/Enter.
+  const [open, setOpen] = useState(false)
+  const hovering = useRef(false)
+  const escaping = useRef(false)
+
+  const handleOpenChange = (next: boolean) => {
+    // Com o mouse em cima o leque já está aberto: o clique não deve fechá-lo. Esc fecha sempre.
+    if (!next && hovering.current && !escaping.current) return
+    setOpen(next)
+  }
+
   return (
     <li
       aria-labelledby={titleId}
       className={cn(
         "flex min-w-0 flex-col",
         featured
-          ? "overflow-hidden rounded-2xl bg-brand-coral-soft/70 md:col-span-2 md:grid md:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:col-span-3"
+          ? "glass overflow-hidden rounded-[2rem] bg-brand-coral-soft/40 md:col-span-2 md:grid md:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:col-span-3"
           : "border-t border-foreground pt-4",
       )}
     >
       <div
         ref={ref}
+        onPointerEnter={(e) => {
+          if (e.pointerType !== "mouse") return
+          hovering.current = true
+          setOpen(true)
+        }}
+        onPointerLeave={(e) => {
+          if (e.pointerType !== "mouse") return
+          hovering.current = false
+          setOpen(false)
+        }}
+        onKeyDownCapture={(e) => {
+          if (e.key === "Escape") escaping.current = true
+        }}
+        onKeyUp={() => {
+          escaping.current = false
+        }}
         className={cn(
           "dot-grid flex min-w-0 justify-center px-4 pt-12 pb-3",
           featured && "md:items-center md:py-10",
@@ -72,6 +100,8 @@ function CategoryCard({ category, index, onSelect }: CategoryCardProps) {
           seed={category.seed}
           files={files}
           action="none"
+          open={open}
+          onOpenChange={handleOpenChange}
           width={width}
           appearDelay={index * 120}
           onFileSelect={(_, i) => onSelect(category.items[i])}
@@ -115,11 +145,13 @@ export function PromptCatalog({ onSelect }: { onSelect: (item: CatalogItem) => v
   return (
     <section id="catalogo" aria-labelledby="catalogo-titulo" className="py-20 sm:py-28">
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
+        <Reveal>
         <SectionHeading
-          id="catalogo-titulo"
-          title="Uma pasta para cada parte da rotina."
-          description="Abra uma pasta e escolha um arquivo. Fitness está completo; o resto é experimental, mas já funciona."
-        />
+            id="catalogo-titulo"
+            title="Uma pasta para cada parte da rotina."
+            description="Abra uma pasta e escolha um arquivo. Fitness está completo; o resto é experimental, mas já funciona."
+          />
+        </Reveal>
         <ul className="mt-12 grid gap-x-8 gap-y-14 md:grid-cols-2 lg:grid-cols-3">
           {PROMPT_CATEGORIES.map((category, i) => (
             <CategoryCard key={category.id} category={category} index={i} onSelect={onSelect} />
