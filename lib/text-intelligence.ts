@@ -42,6 +42,9 @@ melhorar aumentar diminuir perder ganhar manter começar começando academia pos
 cansada cansado cansaço sentindo sinto tempo horas minutos dias semanal diário diária muitas muitos pouco pouca
 costumo costumava normalmente geralmente sempre nunca depois antes durante enquanto porque quando onde
 casa condomínio parque rua praia piscina quadra pilates ombros joelhos costas pernas braços
+agilidade velocidade estrutura constância referência estética capacidade qualidade quantidade vontade cidade
+felicidade novidade universidade realidade atividades atividade alimentando alimentar alimentei estudante
+computação ciência basquete defensores ganhos ganho rendimento frequência praticamente regularidade
 `
     .split(/\s+/)
     .filter(Boolean),
@@ -126,11 +129,14 @@ function isKnown(lower: string): boolean {
 }
 
 /** Procura a palavra do vocabulário mais próxima, só quando há um único candidato claro. */
+/** Terminações de verbo: gerúndio, imperfeito, pretérito e infinitivo não são "corrigidas" para substantivos. */
+const VERB_ENDING = /(?:ndo|ava|avam|aram|eram|iram|ava|ei|ou|amos|emos|imos|ar|er|ir)$/
+
 function fuzzyMatch(lower: string): string | null {
-  if (lower.length < 6) return null
+  if (lower.length < 6 || VERB_ENDING.test(stripAccents(lower))) return null
   const plural = lower.endsWith("s") && lower.length > 6
   const stem = plural ? lower.slice(0, -1) : lower
-  const limit = stem.length >= 9 ? 2 : 1
+  const limit = stem.length >= 10 ? 2 : 1
   const plain = stripAccents(stem)
 
   let best: string | null = null
@@ -144,6 +150,8 @@ function fuzzyMatch(lower: string): string | null {
     if (candidatePlain.length === plain.length && candidatePlain.slice(0, -1) === plain.slice(0, -1)) continue
     const distance = editDistance(plain, candidatePlain)
     if (distance === 0 || distance > limit) continue
+    // com duas diferenças, só aceita se o final da palavra bate (evita trocar flexões de verbo)
+    if (distance === 2 && candidatePlain.slice(-3) !== plain.slice(-3)) continue
     if (distance < bestDistance) {
       best = candidate
       bestDistance = distance

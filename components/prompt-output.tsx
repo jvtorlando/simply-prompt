@@ -46,11 +46,15 @@ type PromptOutputProps = {
   adjustments?: { from: string; to: string }[]
   /** Pontos de atenção que a análise incluiu no prompt. */
   attention?: string[]
+  /** Limite de caracteres exibido no contador (ex.: 6.000). */
+  limit?: number
+  /** Dica curta exibida depois de gerar o prompt. */
+  tip?: string
   onClear: () => void
   clearDisabled?: boolean
 }
 
-export function PromptOutput({ id, title, prompt, empty, adjustments, attention, onClear, clearDisabled }: PromptOutputProps) {
+export function PromptOutput({ id, title, prompt, empty, adjustments, attention, limit, tip, onClear, clearDisabled }: PromptOutputProps) {
   const [status, setStatus] = useState<CopyStatus>("idle")
   const preRef = useRef<HTMLPreElement>(null)
   const timer = useRef<number | undefined>(undefined)
@@ -83,7 +87,11 @@ export function PromptOutput({ id, title, prompt, empty, adjustments, attention,
           {title}
         </h3>
         <span className="text-xs text-muted-foreground tabular-nums">
-          {prompt ? `≈ ${numberFormat.format(prompt.length)} caracteres` : "Nenhum prompt ainda"}
+          {prompt
+            ? limit
+              ? `${numberFormat.format(prompt.length)} / ${numberFormat.format(limit)}`
+              : `${numberFormat.format(prompt.length)} caracteres`
+            : "Nenhum prompt ainda"}
         </span>
       </div>
 
@@ -166,6 +174,8 @@ export function PromptOutput({ id, title, prompt, empty, adjustments, attention,
             ) : null}
           </div>
         ) : null}
+
+        {prompt && tip ? <p className="text-sm leading-relaxed text-muted-foreground">{tip}</p> : null}
 
         <p className="flex items-start gap-2 text-xs leading-relaxed text-muted-foreground">
           <ShieldCheck className="mt-0.5 size-4 shrink-0" aria-hidden="true" />

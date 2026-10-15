@@ -1,22 +1,19 @@
 "use client"
 
 import { useMemo, useState, type ReactNode, type Ref } from "react"
-import { Bot, History, ListChecks, MessagesSquare } from "lucide-react"
+import { History, ListChecks, MessagesSquare, PenLine } from "lucide-react"
 import { motion, useReducedMotion } from "framer-motion"
 
-import { FieldShell } from "@/components/form-controls"
 import { LensChoice } from "@/components/lens-choice"
 import { FitnessForm, fitnessFieldId } from "@/components/fitness-form"
 import { PromptOutput } from "@/components/prompt-output"
+import { FitnessStoryPanel, TemplateStoryPanel } from "@/components/story-panels"
 import { TemplateForm, templateFieldId } from "@/components/template-form"
 import { Button } from "@/components/ui/button"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Textarea } from "@/components/ui/textarea"
 import {
-  FITNESS_INTERVIEW_PROMPT,
   REQUIRED_FITNESS_FIELDS,
   buildFitnessPromptDetailed,
-  buildTemplateInterviewPrompt,
   buildTemplatePromptDetailed,
   validateFitness,
   validateTemplate,
@@ -35,7 +32,7 @@ type Tab = "site" | "ia"
 
 const TAB_ITEMS = [
   { value: "site", label: "Personalizar no site", icon: MessagesSquare },
-  { value: "ia", label: "Deixar a IA perguntar", icon: Bot },
+  { value: "ia", label: "Contar com minhas palavras", icon: PenLine },
 ] as const
 
 // ---- pedaços compartilhados --------------------------------------------------
@@ -53,36 +50,6 @@ function MissingFields({ count, onShow }: { count: number; onShow: () => void })
         Mostrar o que falta
       </Button>
     </div>
-  )
-}
-
-function withExtraContext(prompt: string, extra: string) {
-  const text = extra.trim()
-  if (!text) return prompt
-  return `${prompt}\n\n## Contexto que já posso adiantar\n${text}\n\nConsidere esse contexto e não repita perguntas que ele já responde.`
-}
-
-function InterviewIntro() {
-  return (
-    <p className="text-sm leading-relaxed text-muted-foreground">
-      Prefere conversar? Copie este prompt: a IA explica como vai funcionar, faz as perguntas em blocos curtos, confirma
-      o seu perfil e só depois entrega o resultado.
-    </p>
-  )
-}
-
-function ExtraContextField({ id, value, onChange }: { id: string; value: string; onChange: (v: string) => void }) {
-  return (
-    <FieldShell id={id} label="Quer adiantar algum contexto?" hint="Opcional. Será adicionado ao final do prompt.">
-      <Textarea
-        id={id}
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-        aria-describedby={`${id}-hint`}
-        className="min-h-24 rounded-xl bg-card px-3"
-        placeholder="Ex.: treino há 2 anos, tenho 4 dias livres"
-      />
-    </FieldShell>
   )
 }
 
@@ -145,7 +112,6 @@ type FitnessPanelsProps = DraftProps & {
 function FitnessPanels({ tab, data, onChange, onReset, draftAvailable, onRestoreDraft, onDiscardDraft }: FitnessPanelsProps) {
   const [touched, setTouched] = useState<Set<FitnessField>>(() => new Set())
   const [showAll, setShowAll] = useState(false)
-  const [extra, setExtra] = useState("")
 
   const allErrors = useMemo(() => validateFitness(data), [data])
   const missing = Object.keys(allErrors).length
@@ -160,28 +126,7 @@ function FitnessPanels({ tab, data, onChange, onReset, draftAvailable, onRestore
     onReset()
   }
 
-  if (tab === "ia") {
-    return (
-      <TwoColumns
-        form={
-          <div className="flex flex-col gap-5">
-            <InterviewIntro />
-            <ExtraContextField id="fit-interview-extra" value={extra} onChange={setExtra} />
-          </div>
-        }
-        output={
-          <PromptOutput
-            id="fitness-interview-output"
-            title="Prompt de entrevista"
-            prompt={withExtraContext(FITNESS_INTERVIEW_PROMPT, extra)}
-            empty={null}
-            onClear={() => setExtra("")}
-            clearDisabled={!extra}
-          />
-        }
-      />
-    )
-  }
+  if (tab === "ia") return <FitnessStoryPanel />
 
   return (
     <TwoColumns
@@ -232,7 +177,6 @@ type TemplatePanelsProps = {
 function TemplatePanels({ tab, template, values, onChange, onReset }: TemplatePanelsProps) {
   const [touched, setTouched] = useState<Set<string>>(() => new Set())
   const [showAll, setShowAll] = useState(false)
-  const [extra, setExtra] = useState("")
 
   const allErrors = validateTemplate(template, values)
   const missing = Object.keys(allErrors).length
@@ -241,28 +185,7 @@ function TemplatePanels({ tab, template, values, onChange, onReset }: TemplatePa
     : Object.fromEntries(Object.entries(allErrors).filter(([k]) => touched.has(k)))
   const result = missing === 0 ? buildTemplatePromptDetailed(template, values) : null
 
-  if (tab === "ia") {
-    return (
-      <TwoColumns
-        form={
-          <div className="flex flex-col gap-5">
-            <InterviewIntro />
-            <ExtraContextField id={`tpl-${template.id}-extra`} value={extra} onChange={setExtra} />
-          </div>
-        }
-        output={
-          <PromptOutput
-            id={`${template.id}-interview-output`}
-            title="Prompt de entrevista"
-            prompt={withExtraContext(buildTemplateInterviewPrompt(template), extra)}
-            empty={null}
-            onClear={() => setExtra("")}
-            clearDisabled={!extra}
-          />
-        }
-      />
-    )
-  }
+  if (tab === "ia") return <TemplateStoryPanel template={template} />
 
   return (
     <TwoColumns
@@ -401,7 +324,7 @@ export function PromptBuilder({
               <TabsTrigger
                 key={item.value}
                 value={item.value}
-                className="relative h-auto min-h-11 flex-1 rounded-full border-0 px-4 py-2 text-sm font-medium text-muted-foreground shadow-none after:hidden data-active:text-foreground sm:flex-none"
+                className="relative h-auto min-h-11 min-w-0 flex-1 rounded-full border-0 px-3 py-2 text-center text-sm leading-tight font-medium whitespace-normal text-muted-foreground shadow-none after:hidden data-active:text-foreground sm:flex-none sm:px-4 sm:whitespace-nowrap"
               >
                 {tab === item.value ? (
                   <motion.span

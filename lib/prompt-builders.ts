@@ -1,8 +1,10 @@
 import { bulletList, clean, formatDate, numberedList } from "@/lib/prompt-utils"
+import { STORY_PROMPT_LIMIT } from "@/lib/story-fitness"
 import { normalizeFreeText, type TextAdjustment } from "@/lib/text-intelligence"
 import type { PromptTemplate, TemplateValues, ValidationErrors } from "@/types/prompt"
 
 export * from "@/lib/fitness-prompt"
+export * from "@/lib/story-fitness"
 export { formatDate } from "@/lib/prompt-utils"
 
 // ---- modelos experimentais -------------------------------------------------
@@ -107,11 +109,32 @@ Se algo essencial estiver faltando (por exemplo: ${template.clarify.join("; ")})
 export const buildTemplatePrompt = (template: PromptTemplate, values: TemplateValues): string =>
   buildTemplatePromptDetailed(template, values).prompt
 
-/** Versão "deixar a IA perguntar" de um modelo guiado. */
-export function buildTemplateInterviewPrompt(source: PromptTemplate): string {
-  const template = withLanguage(source, undefined)
-  const questions = template.fields.map((f) => `${f.label}${f.required ? "" : " (opcional)"}`)
-  return `# ${template.title} — entrevista antes da resposta
+// ---- modo "contar com minhas palavras" -------------------------------------------
+
+const LANGUAGES: [string, RegExp][] = [
+  ["inglês", /ingles|english/],
+  ["espanhol", /espanhol|spanish/],
+  ["francês", /frances|french/],
+  ["italiano", /italiano/],
+  ["alemão", /alemao|german/],
+  ["japonês", /japones/],
+  ["mandarim", /mandarim|chines/],
+]
+
+/**
+ * Prompt pronto a partir de um texto livre. O texto vai inteiro para a seção de contexto;
+ * respostas digitadas são corrigidas, mas modelos que recebem texto colado (vaga, currículo,
+ * texto em outro idioma) mantêm o texto exatamente como veio.
+ */
+export function buildTemplateStoryPrompt(source: PromptTemplate, story: string): TemplatePromptResult {
+  const plain = story.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase()
+  const language = LANGUAGES.find(([, r]) => r.test(plain))?.[0]
+  const template = withLanguage(source, language)
+  const keepAsIs = source.fields.some((f) => f.raw)
+  const normalized = keepAsIs ? { text: clean(story), adjustments: [] } : normalizeFreeText(story)
+  const essentials = source.fields.filter((f) => f.required).map((f) => f.label.toLowerCase())
+
+  const prompt = `# ${template.title}
 
 ## 1. Seu papel
 Atue como ${template.role}.
@@ -119,27 +142,28 @@ Atue como ${template.role}.
 ## 2. Objetivo
 ${template.objective}
 
-## 3. Como conduzir
-1. Explique em até duas frases como será a conversa.
-2. Faça as perguntas abaixo em blocos de duas ou três e espere minhas respostas antes de seguir.
-3. Se uma resposta for vaga ou contraditória, faça uma pergunta complementar.
-4. Resuma o que entendeu em tópicos e peça minha confirmação.
-5. Só depois da confirmação, entregue a resposta completa.
+## 3. Minha situação, nas minhas palavras
+"""
+${normalized.text}
+"""
 
-## 4. O que perguntar
-${bulletList([...questions, ...template.clarify])}
-
-## 5. Como trabalhar na resposta final
+## 4. Como trabalhar
 ${numberedList(template.method)}
 
-## 6. Regras
+## 5. Regras
 ${bulletList([...template.rules, ...SHARED_TEMPLATE_RULES])}
 
-## 7. Formato da resposta final
+## 6. Formato da resposta
 ${numberedList(template.outputFormat)}
 
-## 8. Antes de responder, confira
+## 7. Antes de responder, confira
 ${bulletList(template.checks)}
 
-Comece agora pela explicação e pelas primeiras perguntas.`
+## 8. Se faltar informação
+Use o que eu contei acima. Se faltar algo essencial (${[...essentials, ...template.clarify].join("; ")}), pergunte só isso, de forma curta, antes de responder.`
+
+  return { prompt: prompt.slice(0, STORY_PROMPT_LIMIT), adjustments: normalized.adjustments }
 }
+
+/** Dicas do que vale contar no texto livre de um modelo. */
+export const storyHints = (template: PromptTemplate) => template.fields.filter((f) => f.required).map((f) => f.label)
