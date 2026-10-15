@@ -86,9 +86,7 @@ function CategoryCard({ category, index, onSelect }: CategoryCardProps) {
           >
             {category.title}
           </h3>
-          <span className="font-mono text-xs text-muted-foreground">
-            {featured ? "Personal IA" : "experimental"}
-          </span>
+          <span className="text-sm text-muted-foreground">{featured ? "Personal IA" : "experimental"}</span>
         </div>
         <p className="max-w-md text-sm leading-relaxed text-muted-foreground">{category.description}</p>
         <ul className="mt-auto" aria-label={`Prompts de ${category.title}`}>
@@ -119,8 +117,6 @@ export function PromptCatalog({ onSelect }: { onSelect: (item: CatalogItem) => v
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
         <SectionHeading
           id="catalogo-titulo"
-          number="02"
-          label="Catálogo"
           title="Uma pasta para cada parte da rotina."
           description="Abra uma pasta e escolha um arquivo. Fitness está completo; o resto é experimental, mas já funciona."
         />

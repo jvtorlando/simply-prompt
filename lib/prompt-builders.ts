@@ -87,7 +87,7 @@ export function validateFitness(data: FitnessFormData): ValidationErrors<Fitness
 
 // ---- prompt do Personal IA -------------------------------------------------
 
-const GOAL_FOCUS: Record<FitnessGoal, string[]> = {
+export const GOAL_FOCUS: Record<FitnessGoal, string[]> = {
   "perder-gordura": [
     "Priorize treino de força para preservar massa muscular durante a perda de gordura.",
     "Inclua cardio de forma progressiva e sugira formas de aumentar a atividade diária (passos, deslocamentos).",

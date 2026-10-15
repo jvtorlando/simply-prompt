@@ -20,7 +20,7 @@ export async function SiteFooter() {
         <div className="flex flex-col gap-3">
           <BrandMark />
           <p className="max-w-sm text-sm leading-relaxed text-muted-foreground">
-            Prompts interativos para tarefas do dia a dia. Responda algumas perguntas e copie um prompt feito para você.
+            Transforme algumas respostas em um prompt feito para você.
           </p>
           {SITE_CONFIG.githubUrl ? (
             <a

@@ -15,11 +15,11 @@ export function MobileNav({ links }: { links: readonly NavLink[] }) {
   return (
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger
-        render={<Button variant="outline" size="icon-lg" className="size-10 rounded-full md:hidden" aria-label="Abrir menu" />}
+        render={<Button variant="outline" size="icon-lg" className="size-11 rounded-full md:hidden" aria-label="Abrir menu" />}
       >
         <Menu />
       </SheetTrigger>
-      <SheetContent side="right" className="w-[min(20rem,85vw)] bg-background">
+      <SheetContent side="right" className="w-[min(20rem,85vw)] overscroll-contain bg-background">
         <SheetHeader className="border-b border-border px-5 pt-5">
           <SheetTitle>Menu</SheetTitle>
           <SheetDescription>Navegue pelas seções da página.</SheetDescription>

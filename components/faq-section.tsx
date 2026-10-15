@@ -1,4 +1,4 @@
-import { SectionHeading } from "@/components/section-heading"
+import { SectionHeading, splitHeadingSticky, splitLayout } from "@/components/section-heading"
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
 
 const FAQ = [
@@ -31,13 +31,13 @@ const FAQ = [
 export function FaqSection() {
   return (
     <section id="faq" aria-labelledby="faq-titulo" className="py-20 sm:py-28">
-      <div className="mx-auto max-w-6xl px-4 sm:px-6">
-        <SectionHeading id="faq-titulo" number="05" label="Perguntas" title="Perguntas frequentes" />
-        <Accordion className="mt-8 lg:pl-48">
+      <div className={`mx-auto max-w-6xl px-4 sm:px-6 ${splitLayout}`}>
+        <SectionHeading id="faq-titulo" size="md" className={splitHeadingSticky} title="Perguntas frequentes" />
+        <Accordion>
           {FAQ.map((item) => (
-            <AccordionItem key={item.q} value={item.q} className="border-border">
+            <AccordionItem key={item.q} value={item.q} className="border-foreground/15 first:border-t-0">
               <AccordionTrigger className="py-5 text-base font-medium hover:no-underline">{item.q}</AccordionTrigger>
-              <AccordionContent className="max-w-2xl pb-5 text-[15px] leading-relaxed text-muted-foreground">
+              <AccordionContent className="max-w-xl pb-5 text-[15px] leading-relaxed text-muted-foreground">
                 {item.a}
               </AccordionContent>
             </AccordionItem>

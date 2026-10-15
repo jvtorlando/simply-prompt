@@ -101,8 +101,8 @@ export function NativeSelect({
         aria-required={required || undefined}
         className={cn(
           controlClass,
-          "w-full min-w-0 appearance-none border border-input pr-9 text-base outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 md:text-sm",
-          !value && "text-muted-foreground",
+          "w-full min-w-0 appearance-none border border-input bg-card pr-9 text-base outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 md:text-sm",
+          value ? "text-foreground" : "text-muted-foreground",
         )}
       >
         <option value="">{placeholder}</option>

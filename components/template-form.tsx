@@ -25,12 +25,14 @@ export function TemplateForm({ template, values, errors, onChange, onBlur }: Tem
         const value = values[field.id] ?? ""
         const shared = {
           id,
+          name: field.id,
+          autoComplete: "off",
           value,
           onBlur: () => onBlur(field.id),
           "aria-invalid": error ? true : undefined,
           "aria-required": field.required || undefined,
           "aria-describedby": describedBy(id, field.hint, error),
-          placeholder: field.placeholder,
+          placeholder: field.placeholder && !field.placeholder.endsWith("…") ? `${field.placeholder}…` : field.placeholder,
         }
         return (
           <FieldShell key={field.id} id={id} label={field.label} required={field.required} hint={field.hint} error={error}>

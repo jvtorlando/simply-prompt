@@ -13,7 +13,7 @@ export const NAV_LINKS = [
 
 export function BrandMark({ className }: { className?: string }) {
   return (
-    <span className={cn("inline-flex items-center gap-2 font-semibold tracking-tight", className)}>
+    <span translate="no" className={cn("inline-flex items-center gap-2 font-heading text-lg font-semibold tracking-tight", className)}>
       <Image src="/logo-sp.png" alt="" width={28} height={28} className="size-7" priority />
       Simply Prompt
     </span>

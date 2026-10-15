@@ -1,15 +1,22 @@
 import type { Metadata, Viewport } from "next"
 import type { ReactNode } from "react"
-import { Geist, Geist_Mono } from "next/font/google"
+import { Bricolage_Grotesque, Geist_Mono, Instrument_Sans } from "next/font/google"
 import "./globals.css"
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+// Títulos com personalidade, texto de leitura neutro e mono só para o texto do prompt.
+const display = Bricolage_Grotesque({
+  variable: "--font-display",
+  subsets: ["latin"],
+  axes: ["opsz"],
+})
+
+const text = Instrument_Sans({
+  variable: "--font-text",
   subsets: ["latin"],
 })
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const mono = Geist_Mono({
+  variable: "--font-mono-prompt",
   subsets: ["latin"],
 })
 
@@ -47,7 +54,8 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: Readonly<{ children: ReactNode }>) {
   return (
-    <html lang="pt-BR" className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+    <html lang="pt-BR" className={`${display.variable} ${text.variable} ${mono.variable} antialiased`}
+      style={{ colorScheme: "light" }}>
       <body className="min-h-dvh bg-background text-foreground">{children}</body>
     </html>
   )

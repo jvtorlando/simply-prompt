@@ -78,7 +78,7 @@ export function PromptOutput({ id, title, prompt, empty, onClear, clearDisabled 
         <h3 id={titleId} className="text-base font-semibold tracking-tight">
           {title}
         </h3>
-        <span className="font-mono text-xs text-muted-foreground">
+        <span className="text-xs text-muted-foreground tabular-nums">
           {prompt ? `≈ ${numberFormat.format(prompt.length)} caracteres` : "Nenhum prompt ainda"}
         </span>
       </div>
@@ -89,7 +89,7 @@ export function PromptOutput({ id, title, prompt, empty, onClear, clearDisabled 
             ref={preRef}
             tabIndex={0}
             aria-label={`${title}: texto completo`}
-            className="max-h-[26rem] overflow-auto rounded-2xl bg-muted/70 p-4 font-mono text-[12.5px] leading-relaxed break-words whitespace-pre-wrap text-foreground lg:max-h-[max(14rem,calc(100dvh-22rem))]"
+            className="max-h-[26rem] overflow-auto overscroll-contain rounded-2xl bg-muted/70 p-4 font-mono text-[12.5px] leading-relaxed break-words whitespace-pre-wrap text-foreground lg:max-h-[max(14rem,calc(100dvh-22rem))]"
           >
             {prompt}
           </pre>

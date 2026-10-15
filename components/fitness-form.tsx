@@ -45,12 +45,15 @@ function Group({ title, description, children }: { title: string; description?: 
 export function FitnessForm({ data, errors, onChange, onBlur }: FitnessFormProps) {
   const text = (field: "sports" | "preferredExercises" | "dislikedExercises" | "scheduleConstraints" | "deadline" | "otherEquipment") => ({
     id: fitnessFieldId(field),
+    name: field,
+    autoComplete: "off",
     value: data[field],
     onChange: (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => onChange(field, e.target.value),
   })
 
   const numeric = (field: "age" | "height" | "weight", hint: string) => ({
     id: fitnessFieldId(field),
+    name: field,
     value: data[field],
     inputMode: "decimal" as const,
     autoComplete: "off",
@@ -85,13 +88,13 @@ export function FitnessForm({ data, errors, onChange, onBlur }: FitnessFormProps
       <Group title="Sobre você" description="Usado apenas para ajustar volume e intensidade. Não pedimos nome, e-mail ou telefone.">
         <div className="grid gap-4 sm:grid-cols-3">
           <FieldShell id={fitnessFieldId("age")} label="Idade" required hint="Em anos" error={errors.age}>
-            <Input {...numeric("age", "Em anos")} placeholder="Ex.: 28" />
+            <Input {...numeric("age", "Em anos")} placeholder="Ex.: 28…" />
           </FieldShell>
           <FieldShell id={fitnessFieldId("height")} label="Altura" required hint="Em centímetros" error={errors.height}>
-            <Input {...numeric("height", "Em centímetros")} placeholder="Ex.: 172" />
+            <Input {...numeric("height", "Em centímetros")} placeholder="Ex.: 172…" />
           </FieldShell>
           <FieldShell id={fitnessFieldId("weight")} label="Peso" required hint="Em quilogramas" error={errors.weight}>
-            <Input {...numeric("weight", "Em quilogramas")} placeholder="Ex.: 74,5" />
+            <Input {...numeric("weight", "Em quilogramas")} placeholder="Ex.: 74,5…" />
           </FieldShell>
         </div>
         <ChoiceGroup
@@ -140,7 +143,7 @@ export function FitnessForm({ data, errors, onChange, onBlur }: FitnessFormProps
           id={fitnessFieldId("scheduleConstraints")}
           label="Restrições de horário"
         >
-          <Input {...text("scheduleConstraints")} className={controlClass} placeholder="Ex.: só depois das 19h; sábado livre" />
+          <Input {...text("scheduleConstraints")} className={controlClass} placeholder="Ex.: só depois das 19h; sábado livre…" />
         </FieldShell>
       </Group>
 
@@ -192,23 +195,23 @@ export function FitnessForm({ data, errors, onChange, onBlur }: FitnessFormProps
           <FieldError id={`${fitnessFieldId("equipment")}-error`} message={errors.equipment} />
         </fieldset>
         <FieldShell id={fitnessFieldId("otherEquipment")} label="Outros equipamentos">
-          <Input {...text("otherEquipment")} className={controlClass} placeholder="Ex.: step, caixa de salto, TRX" />
+          <Input {...text("otherEquipment")} className={controlClass} placeholder="Ex.: step, caixa de salto, TRX…" />
         </FieldShell>
       </Group>
 
       <Group title="Detalhes opcionais" description="Quanto mais contexto, mais específico o plano. Pule o que não quiser responder.">
         <div className="grid gap-4 sm:grid-cols-2">
           <FieldShell id={fitnessFieldId("sports")} label="Esportes praticados">
-            <Input {...text("sports")} className={controlClass} placeholder="Ex.: futebol aos domingos" />
+            <Input {...text("sports")} className={controlClass} placeholder="Ex.: futebol aos domingos…" />
           </FieldShell>
           <FieldShell id={fitnessFieldId("deadline")} label="Prazo ou evento específico">
-            <Input {...text("deadline")} className={controlClass} placeholder="Ex.: corrida de 10 km em março" />
+            <Input {...text("deadline")} className={controlClass} placeholder="Ex.: corrida de 10 km em março…" />
           </FieldShell>
           <FieldShell id={fitnessFieldId("preferredExercises")} label="Exercícios preferidos">
-            <Input {...text("preferredExercises")} className={controlClass} placeholder="Ex.: agachamento, remada" />
+            <Input {...text("preferredExercises")} className={controlClass} placeholder="Ex.: agachamento, remada…" />
           </FieldShell>
           <FieldShell id={fitnessFieldId("dislikedExercises")} label="Exercícios que não gosta">
-            <Input {...text("dislikedExercises")} className={controlClass} placeholder="Ex.: burpee, esteira" />
+            <Input {...text("dislikedExercises")} className={controlClass} placeholder="Ex.: burpee, esteira…" />
           </FieldShell>
           <FieldShell id={fitnessFieldId("sleep")} label="Qualidade atual do sono">
             <NativeSelect
@@ -240,7 +243,7 @@ export function FitnessForm({ data, errors, onChange, onBlur }: FitnessFormProps
             onChange={(e) => onChange("injuries", e.target.value)}
             aria-describedby={`${fitnessFieldId("injuries")}-hint`}
             className="min-h-20 rounded-xl bg-card px-3"
-            placeholder="Ex.: dor no joelho direito ao agachar fundo"
+            placeholder="Ex.: dor no joelho direito ao agachar fundo…"
           />
         </FieldShell>
         <FieldShell id={fitnessFieldId("notes")} label="Observações adicionais" hint="Não é salvo neste navegador.">
@@ -250,7 +253,7 @@ export function FitnessForm({ data, errors, onChange, onBlur }: FitnessFormProps
             onChange={(e) => onChange("notes", e.target.value)}
             aria-describedby={`${fitnessFieldId("notes")}-hint`}
             className="min-h-20 rounded-xl bg-card px-3"
-            placeholder="Algo mais que a IA deveria saber?"
+            placeholder="Algo mais que a IA deveria saber…"
           />
         </FieldShell>
       </Group>

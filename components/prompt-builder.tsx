@@ -2,6 +2,7 @@
 
 import { useMemo, useState, type ReactNode, type Ref } from "react"
 import { Bot, History, ListChecks, MessagesSquare } from "lucide-react"
+import { motion, useReducedMotion } from "framer-motion"
 
 import { FieldShell, controlClass } from "@/components/form-controls"
 import { FitnessForm, fitnessFieldId } from "@/components/fitness-form"
@@ -30,6 +31,11 @@ import type {
 } from "@/types/prompt"
 
 type Tab = "site" | "ia"
+
+const TAB_ITEMS = [
+  { value: "site", label: "Personalizar no site", icon: MessagesSquare },
+  { value: "ia", label: "Deixar a IA perguntar", icon: Bot },
+] as const
 
 // ---- pedaços compartilhados --------------------------------------------------
 
@@ -361,6 +367,7 @@ export function PromptBuilder({
   onDiscardDraft,
 }: PromptBuilderProps) {
   const [tab, setTab] = useState<Tab>("site")
+  const reduceMotion = useReducedMotion()
   const template = selection.kind === "template" ? getTemplate(selection.templateId) : undefined
   const isFitness = !template
 
@@ -369,38 +376,43 @@ export function PromptBuilder({
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
         <div className="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
           <div className="max-w-2xl">
-            <p className="font-mono text-xs text-muted-foreground">
-              <span className="text-brand-rust">03</span> / Criar prompt
-              <span aria-hidden="true"> · </span>
-              {isFitness ? "principal" : "experimental"}
-            </p>
             <h2
               id="criar-titulo"
               ref={headingRef}
               tabIndex={-1}
-              className="mt-3 rounded-md text-4xl font-semibold tracking-[-0.04em] outline-none focus-visible:ring-3 focus-visible:ring-ring/50 sm:text-5xl"
+              className="rounded-md text-4xl font-semibold tracking-[-0.035em] outline-none focus-visible:ring-3 focus-visible:ring-ring/50 sm:text-5xl lg:text-6xl"
             >
               {isFitness ? "Personal IA" : template.title}
             </h2>
             <p className="mt-4 max-w-xl text-base leading-relaxed text-pretty text-muted-foreground">
               {isFitness
                 ? "Gere um prompt de treino com seu objetivo, rotina, equipamentos e limitações, pronto para colar na sua IA."
-                : template.description}
+                : `${template.description} Modelo experimental.`}
             </p>
           </div>
           <ModelPicker value={selection} onChange={onSelectionChange} />
         </div>
 
         <Tabs value={tab} onValueChange={(v) => setTab(v as Tab)} className="mt-10 gap-6">
-          <TabsList className="grid h-auto! w-full grid-cols-2 rounded-full bg-muted p-1 sm:inline-flex sm:w-fit">
-            <TabsTrigger value="site" className="h-auto min-h-10 rounded-full px-3 py-1.5 text-[13px] leading-tight whitespace-normal sm:px-4 sm:text-sm sm:whitespace-nowrap">
-              <MessagesSquare aria-hidden="true" className="hidden sm:block" />
-              Personalizar no site
-            </TabsTrigger>
-            <TabsTrigger value="ia" className="h-auto min-h-10 rounded-full px-3 py-1.5 text-[13px] leading-tight whitespace-normal sm:px-4 sm:text-sm sm:whitespace-nowrap">
-              <Bot aria-hidden="true" className="hidden sm:block" />
-              Deixar a IA perguntar
-            </TabsTrigger>
+          <TabsList variant="line" className="h-auto! w-full justify-start gap-6 border-b border-foreground/20 p-0 sm:w-fit">
+            {TAB_ITEMS.map((item) => (
+              <TabsTrigger
+                key={item.value}
+                value={item.value}
+                className="relative h-auto min-h-11 flex-none rounded-none border-0 px-0 py-2 text-[15px] font-medium after:hidden data-active:text-foreground"
+              >
+                <item.icon aria-hidden="true" className="hidden sm:block" />
+                {item.label}
+                {tab === item.value ? (
+                  <motion.span
+                    layoutId="builder-tab-underline"
+                    aria-hidden="true"
+                    className="absolute inset-x-0 -bottom-px h-0.5 bg-foreground"
+                    transition={reduceMotion ? { duration: 0 } : { type: "spring", stiffness: 500, damping: 40 }}
+                  />
+                ) : null}
+              </TabsTrigger>
+            ))}
           </TabsList>
 
           <TabsContent value={tab}>
