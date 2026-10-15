@@ -301,3 +301,58 @@
     0 2px 6px oklch(0.2 0.01 60 / 0.08),
     0 28px 56px -20px oklch(0.2 0.02 50 / 0.4);
 }
+
+/* ---- dica de toque nas pastas (só telas de toque) ---------------------------- */
+.tap-hint {
+  position: absolute;
+  left: 50%;
+  top: 70%;
+  z-index: 20;
+  width: 16px;
+  height: 16px;
+  margin: -8px 0 0 -8px;
+  pointer-events: none;
+  opacity: 0;
+  animation: tap-hint-life 4.2s ease both;
+}
+.tap-hint::before,
+.tap-hint::after {
+  content: "";
+  position: absolute;
+  border-radius: 9999px;
+}
+.tap-hint::before {
+  inset: 4px;
+  background: #fff;
+  box-shadow: 0 0 0 1px oklch(0.2 0.01 60 / 0.08), 0 2px 6px oklch(0.2 0.01 60 / 0.25);
+  animation: tap-hint-dot 1.2s ease-out 3 both;
+  animation-delay: inherit;
+}
+.tap-hint::after {
+  inset: 0;
+  border: 1.5px solid oklch(1 0 0 / 0.95);
+  animation: tap-hint-ring 1.2s cubic-bezier(0.2, 0.8, 0.2, 1) 3 both;
+  animation-delay: inherit;
+}
+.tap-hint[data-tone="light"]::after { border-color: oklch(0.2 0.01 60 / 0.35); }
+@keyframes tap-hint-life {
+  0%, 100% { opacity: 0; }
+  8%, 88% { opacity: 1; }
+}
+@keyframes tap-hint-ring {
+  0% { transform: scale(0.6); opacity: 0.9; }
+  100% { transform: scale(3.2); opacity: 0; }
+}
+@keyframes tap-hint-dot {
+  0%, 100% { transform: scale(1); }
+  12% { transform: scale(0.78); }
+}
+/* com mouse a pasta já reage ao passar o cursor: sem dica */
+@media (hover: hover) and (pointer: fine) {
+  .tap-hint { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .tap-hint { animation: tap-hint-life 4.2s step-end both; }
+  .tap-hint::before, .tap-hint::after { animation: none; }
+  .tap-hint::after { opacity: 0; }
+}

@@ -53,9 +53,29 @@ function CategoryCard({ category, index, onSelect }: CategoryCardProps) {
   const hovering = useRef(false)
   const escaping = useRef(false)
 
+  // Dica de toque (só em telas de toque): aparece quando a pasta entra na tela e some depois da primeira abertura.
+  const [hintVisible, setHintVisible] = useState(false)
+  const [touched, setTouched] = useState(false)
+  useEffect(() => {
+    const el = ref.current
+    if (!el || typeof IntersectionObserver === "undefined") return
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((e) => e.isIntersecting)) {
+          setHintVisible(true)
+          observer.disconnect()
+        }
+      },
+      { threshold: 0.6 },
+    )
+    observer.observe(el)
+    return () => observer.disconnect()
+  }, [ref])
+
   const handleOpenChange = (next: boolean) => {
     // Com o mouse em cima o leque já está aberto: o clique não deve fechá-lo. Esc fecha sempre.
     if (!next && hovering.current && !escaping.current) return
+    if (next) setTouched(true)
     setOpen(next)
   }
 
@@ -92,6 +112,7 @@ function CategoryCard({ category, index, onSelect }: CategoryCardProps) {
           featured && "md:items-center md:py-10",
         )}
       >
+        <div className="relative">
         <GlassFolder
           label={category.title}
           meta={`${category.items.length} prompts`}
@@ -106,6 +127,15 @@ function CategoryCard({ category, index, onSelect }: CategoryCardProps) {
           appearDelay={index * 120}
           onFileSelect={(_, i) => onSelect(category.items[i])}
         />
+          {hintVisible && !touched ? (
+            <span
+              aria-hidden="true"
+              className="tap-hint"
+              data-tone={featured ? "dark" : "light"}
+              style={{ animationDelay: `${0.9 + index * 0.15}s` }}
+            />
+          ) : null}
+        </div>
       </div>
 
       <div className={cn("flex flex-1 flex-col gap-4", featured ? "p-6 sm:p-10" : "pt-2")}>
