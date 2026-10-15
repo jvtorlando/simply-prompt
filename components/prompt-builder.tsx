@@ -4,7 +4,8 @@ import { useMemo, useState, type ReactNode, type Ref } from "react"
 import { Bot, History, ListChecks, MessagesSquare } from "lucide-react"
 import { motion, useReducedMotion } from "framer-motion"
 
-import { FieldShell, controlClass } from "@/components/form-controls"
+import { FieldShell } from "@/components/form-controls"
+import { LensChoice } from "@/components/lens-choice"
 import { FitnessForm, fitnessFieldId } from "@/components/fitness-form"
 import { PromptOutput } from "@/components/prompt-output"
 import { TemplateForm, templateFieldId } from "@/components/template-form"
@@ -14,9 +15,9 @@ import { Textarea } from "@/components/ui/textarea"
 import {
   FITNESS_INTERVIEW_PROMPT,
   REQUIRED_FITNESS_FIELDS,
-  buildFitnessPrompt,
+  buildFitnessPromptDetailed,
   buildTemplateInterviewPrompt,
-  buildTemplatePrompt,
+  buildTemplatePromptDetailed,
   validateFitness,
   validateTemplate,
 } from "@/lib/prompt-builders"
@@ -151,7 +152,7 @@ function FitnessPanels({ tab, data, onChange, onReset, draftAvailable, onRestore
   const visibleErrors: ValidationErrors<FitnessField> = showAll
     ? allErrors
     : Object.fromEntries(Object.entries(allErrors).filter(([k]) => touched.has(k as FitnessField)))
-  const prompt = missing === 0 ? buildFitnessPrompt(data) : null
+  const result = useMemo(() => (missing === 0 ? buildFitnessPromptDetailed(data) : null), [missing, data])
 
   const reset = () => {
     setTouched(new Set())
@@ -199,7 +200,9 @@ function FitnessPanels({ tab, data, onChange, onReset, draftAvailable, onRestore
         <PromptOutput
           id="fitness-output"
           title="Seu prompt do Personal IA"
-          prompt={prompt}
+          prompt={result?.prompt ?? null}
+          adjustments={result?.adjustments}
+          attention={result?.attention}
           empty={
             <MissingFields
               count={missing}
@@ -216,7 +219,7 @@ function FitnessPanels({ tab, data, onChange, onReset, draftAvailable, onRestore
   )
 }
 
-// ---- modelos experimentais ---------------------------------------------------
+// ---- modelos guiados ---------------------------------------------------------
 
 type TemplatePanelsProps = {
   tab: Tab
@@ -236,7 +239,7 @@ function TemplatePanels({ tab, template, values, onChange, onReset }: TemplatePa
   const visibleErrors = showAll
     ? allErrors
     : Object.fromEntries(Object.entries(allErrors).filter(([k]) => touched.has(k)))
-  const prompt = missing === 0 ? buildTemplatePrompt(template, values) : null
+  const result = missing === 0 ? buildTemplatePromptDetailed(template, values) : null
 
   if (tab === "ia") {
     return (
@@ -278,7 +281,8 @@ function TemplatePanels({ tab, template, values, onChange, onReset }: TemplatePa
         <PromptOutput
           id={`${template.id}-output`}
           title={`Seu prompt: ${template.title}`}
-          prompt={prompt}
+          prompt={result?.prompt ?? null}
+          adjustments={result?.adjustments}
           empty={
             <MissingFields
               count={missing}
@@ -301,41 +305,36 @@ function TemplatePanels({ tab, template, values, onChange, onReset }: TemplatePa
 
 // ---- construtor ----------------------------------------------------------------
 
-const selectionKey = (s: BuilderSelection) => (s.kind === "fitness" ? "fitness" : `template:${s.templateId}`)
-
+/** Escolha do que criar: categoria em barra de vidro e, nas categorias com vários modelos, os modelos logo abaixo. */
 function ModelPicker({ value, onChange }: { value: BuilderSelection; onChange: (s: BuilderSelection) => void }) {
+  const activeTemplate = value.kind === "template" ? getTemplate(value.templateId) : undefined
+  const categoryId = activeTemplate?.categoryId ?? "fitness"
+  const category = PROMPT_CATEGORIES.find((c) => c.id === categoryId) ?? PROMPT_CATEGORIES[0]
+  const models = category.items.filter((item) => item.kind === "template")
+
   return (
-    <div className="flex min-w-0 flex-col gap-2 sm:w-72">
-      <label htmlFor="builder-model" className="text-sm font-medium">
-        Modelo de prompt
-      </label>
-      <select
-        id="builder-model"
-        value={selectionKey(value)}
-        onChange={(e) => {
-          const v = e.target.value
-          onChange(v === "fitness" ? { kind: "fitness" } : { kind: "template", templateId: v.slice("template:".length) })
+    <div className="flex min-w-0 flex-col gap-3">
+      <LensChoice
+        variant="segment"
+        ariaLabel="Categoria do prompt"
+        name="builder-category"
+        value={categoryId}
+        options={PROMPT_CATEGORIES.map((c) => ({ value: c.id, label: c.title }))}
+        onChange={(id) => {
+          const next = PROMPT_CATEGORIES.find((c) => c.id === id)
+          const first = next?.items.find((item) => item.kind === "template")
+          onChange(first && first.kind === "template" ? { kind: "template", templateId: first.templateId } : { kind: "fitness" })
         }}
-        className={`${controlClass} w-full border border-input text-base outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 md:text-sm`}
-      >
-        {PROMPT_CATEGORIES.map((category) =>
-          category.id === "fitness" ? (
-            <option key="fitness" value="fitness">
-              Fitness — Personal IA
-            </option>
-          ) : (
-            <optgroup key={category.id} label={`${category.title} (experimental)`}>
-              {category.items.map((item) =>
-                item.kind === "template" ? (
-                  <option key={item.id} value={`template:${item.templateId}`}>
-                    {item.title}
-                  </option>
-                ) : null,
-              )}
-            </optgroup>
-          ),
-        )}
-      </select>
+      />
+      {models.length > 0 ? (
+        <LensChoice
+          ariaLabel={`Modelos de ${category.title}`}
+          name="builder-model"
+          value={activeTemplate?.id ?? ""}
+          options={models.map((item) => ({ value: item.kind === "template" ? item.templateId : item.id, label: item.title }))}
+          onChange={(id) => onChange({ kind: "template", templateId: id })}
+        />
+      ) : null}
     </div>
   )
 }
@@ -374,7 +373,7 @@ export function PromptBuilder({
   return (
     <section id="criar" aria-labelledby="criar-titulo" className="scroll-mt-16 border-y border-foreground py-20 sm:py-28">
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
-        <div className="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
+        <div>
           <div className="max-w-2xl">
             <h2
               id="criar-titulo"
@@ -387,30 +386,35 @@ export function PromptBuilder({
             <p className="mt-4 max-w-xl text-base leading-relaxed text-pretty text-muted-foreground">
               {isFitness
                 ? "Gere um prompt de treino com seu objetivo, rotina, equipamentos e limitações, pronto para colar na sua IA."
-                : `${template.description} Modelo experimental.`}
+                : template.description}
             </p>
           </div>
+        </div>
+
+        <div className="mt-8">
           <ModelPicker value={selection} onChange={onSelectionChange} />
         </div>
 
         <Tabs value={tab} onValueChange={(v) => setTab(v as Tab)} className="mt-10 gap-6">
-          <TabsList variant="line" className="h-auto! w-full justify-start gap-6 border-b border-foreground/20 p-0 sm:w-fit">
+          <TabsList variant="line" className="glass h-auto! w-full justify-start gap-0 rounded-full p-1 sm:w-fit">
             {TAB_ITEMS.map((item) => (
               <TabsTrigger
                 key={item.value}
                 value={item.value}
-                className="relative h-auto min-h-11 flex-none rounded-none border-0 px-0 py-2 text-[15px] font-medium after:hidden data-active:text-foreground"
+                className="relative h-auto min-h-11 flex-1 rounded-full border-0 px-4 py-2 text-sm font-medium text-muted-foreground shadow-none after:hidden data-active:text-foreground sm:flex-none"
               >
-                <item.icon aria-hidden="true" className="hidden sm:block" />
-                {item.label}
                 {tab === item.value ? (
                   <motion.span
-                    layoutId="builder-tab-underline"
+                    layoutId="builder-tab-lens"
                     aria-hidden="true"
-                    className="absolute inset-x-0 -bottom-px h-0.5 bg-foreground"
-                    transition={reduceMotion ? { duration: 0 } : { type: "spring", stiffness: 500, damping: 40 }}
+                    className="lens absolute inset-0 rounded-full"
+                    transition={reduceMotion ? { duration: 0 } : { type: "spring", stiffness: 420, damping: 34 }}
                   />
                 ) : null}
+                <span className="relative z-10 flex items-center gap-2">
+                  <item.icon aria-hidden="true" className="hidden sm:block" />
+                  {item.label}
+                </span>
               </TabsTrigger>
             ))}
           </TabsList>

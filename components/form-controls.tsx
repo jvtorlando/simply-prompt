@@ -1,9 +1,11 @@
 "use client"
 
 import type { ReactNode } from "react"
-import { ChevronDown, CircleAlert } from "lucide-react"
+import { CircleAlert } from "lucide-react"
 
+import { LensChoice } from "@/components/lens-choice"
 import { Label } from "@/components/ui/label"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { cn } from "@/lib/utils"
 
 /** Classes compartilhadas por Input, Textarea e select nativo. */
@@ -65,58 +67,71 @@ export function describedBy(id: string, hint?: string, error?: string): string |
   return ids.length ? ids.join(" ") : undefined
 }
 
-type NativeSelectProps = {
+type SelectFieldProps = {
   id: string
   value: string
   onChange: (value: string) => void
   onBlur?: () => void
   options: { value: string; label: string }[]
   placeholder?: string
+  /** Rótulo da opção que limpa o campo (para campos opcionais). */
+  clearLabel?: string
   invalid?: boolean
   describedById?: string
   required?: boolean
 }
 
-/** Select nativo: melhor experiência em celulares e leitores de tela. */
-export function NativeSelect({
+const NONE = "__none__"
+
+/** Seletor no padrão do app: gatilho em vidro e lista em vidro, com teclado e leitor de tela. */
+export function SelectField({
   id,
   value,
   onChange,
   onBlur,
   options,
-  placeholder = "Selecione",
+  placeholder = "Selecione…",
+  clearLabel,
   invalid,
   describedById,
   required,
-}: NativeSelectProps) {
+}: SelectFieldProps) {
+  const items = [
+    ...(clearLabel ? [{ value: NONE, label: clearLabel }] : []),
+    ...options,
+  ]
   return (
-    <div className="relative min-w-0">
-      <select
+    <Select
+      items={items}
+      value={value === "" ? (clearLabel ? NONE : null) : value}
+      onValueChange={(next) => onChange(!next || next === NONE ? "" : next)}
+    >
+      <SelectTrigger
         id={id}
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
         onBlur={onBlur}
         aria-invalid={invalid || undefined}
         aria-describedby={describedById}
         aria-required={required || undefined}
         className={cn(
           controlClass,
-          "w-full min-w-0 appearance-none border border-input bg-card pr-9 text-base outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 md:text-sm",
-          value ? "text-foreground" : "text-muted-foreground",
+          "glass w-full justify-between border-input py-0 text-base md:text-sm",
+          value === "" && !clearLabel ? "text-muted-foreground" : "text-foreground",
         )}
       >
-        <option value="">{placeholder}</option>
-        {options.map((o) => (
-          <option key={o.value} value={o.value} className="text-foreground">
-            {o.label}
-          </option>
+        <SelectValue placeholder={placeholder} />
+      </SelectTrigger>
+      <SelectContent alignItemWithTrigger={false} sideOffset={8} className="glass-pop rounded-2xl p-1.5 ring-0">
+        {items.map((item) => (
+          <SelectItem
+            key={item.value}
+            value={item.value}
+            className="min-h-10 rounded-xl py-2 pr-9 pl-3 text-[15px] focus:bg-foreground/[0.06] focus:text-foreground data-selected:font-medium"
+          >
+            {item.label}
+          </SelectItem>
         ))}
-      </select>
-      <ChevronDown
-        aria-hidden="true"
-        className="pointer-events-none absolute top-1/2 right-3 size-4 -translate-y-1/2 text-muted-foreground"
-      />
-    </div>
+      </SelectContent>
+    </Select>
   )
 }
 
@@ -132,8 +147,8 @@ type ChoiceGroupProps = {
   columns?: string
 }
 
-/** Grupo de rádio com aparência de botões, usável por teclado (setas) e toque. */
-export function ChoiceGroup({ id, name, legend, value, onChange, options, error, columns }: ChoiceGroupProps) {
+/** Grupo de escolha com lente de vidro: usável por teclado (setas) e toque. */
+export function ChoiceGroup({ id, name, legend, value, onChange, options, error }: ChoiceGroupProps) {
   const errorId = `${id}-error`
   return (
     <fieldset aria-describedby={error ? errorId : undefined} className="flex min-w-0 flex-col gap-2">
@@ -141,31 +156,14 @@ export function ChoiceGroup({ id, name, legend, value, onChange, options, error,
         {legend}
         <RequiredMark />
       </legend>
-      <div className={cn("grid gap-2", columns ?? "grid-cols-2 sm:grid-cols-3")}>
-        {options.map((o, i) => (
-          <label
-            key={o.value}
-            className={cn(
-              "relative flex min-h-11 cursor-pointer items-center rounded-xl border border-input bg-card px-3 py-2 text-sm transition-colors select-none hover:border-foreground/30",
-              "has-checked:border-foreground has-checked:bg-foreground has-checked:text-background",
-              "has-focus-visible:ring-3 has-focus-visible:ring-ring/50",
-              error && !value && "border-destructive/60",
-            )}
-          >
-            <input
-              id={i === 0 ? id : undefined}
-              type="radio"
-              name={name}
-              value={o.value}
-              checked={value === o.value}
-              onChange={() => onChange(o.value)}
-              aria-invalid={(error && !value) || undefined}
-              className="sr-only"
-            />
-            {o.label}
-          </label>
-        ))}
-      </div>
+      <LensChoice
+        name={name}
+        value={value}
+        onChange={onChange}
+        options={options}
+        firstId={id}
+        invalid={!!error}
+      />
       <FieldError id={errorId} message={error} />
     </fieldset>
   )

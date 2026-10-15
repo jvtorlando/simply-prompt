@@ -42,11 +42,15 @@ type PromptOutputProps = {
   /** `null` mostra o estado vazio. */
   prompt: string | null
   empty: ReactNode
+  /** Correções automáticas feitas no texto digitado. */
+  adjustments?: { from: string; to: string }[]
+  /** Pontos de atenção que a análise incluiu no prompt. */
+  attention?: string[]
   onClear: () => void
   clearDisabled?: boolean
 }
 
-export function PromptOutput({ id, title, prompt, empty, onClear, clearDisabled }: PromptOutputProps) {
+export function PromptOutput({ id, title, prompt, empty, adjustments, attention, onClear, clearDisabled }: PromptOutputProps) {
   const [status, setStatus] = useState<CopyStatus>("idle")
   const preRef = useRef<HTMLPreElement>(null)
   const timer = useRef<number | undefined>(undefined)
@@ -139,6 +143,29 @@ export function PromptOutput({ id, title, prompt, empty, onClear, clearDisabled 
             </span>
           ) : null}
         </p>
+
+        {prompt && (adjustments?.length || attention?.length) ? (
+          <div className="flex flex-col gap-2 rounded-2xl bg-white/50 p-3 text-sm leading-relaxed">
+            {adjustments?.length ? (
+              <p>
+                <span className="font-medium">Ajustamos seu texto: </span>
+                <span className="text-muted-foreground">
+                  {adjustments
+                    .slice(0, 8)
+                    .map((a) => `${a.from} → ${a.to}`)
+                    .join(", ")}
+                  {adjustments.length > 8 ? ` e mais ${adjustments.length - 8}` : ""}.
+                </span>
+              </p>
+            ) : null}
+            {attention?.length ? (
+              <p>
+                <span className="font-medium">Incluímos {attention.length === 1 ? "1 ponto" : `${attention.length} pontos`} de atenção </span>
+                <span className="text-muted-foreground">com base nas suas respostas. Você pode editar o texto depois de colar na IA.</span>
+              </p>
+            ) : null}
+          </div>
+        ) : null}
 
         <p className="flex items-start gap-2 text-xs leading-relaxed text-muted-foreground">
           <ShieldCheck className="mt-0.5 size-4 shrink-0" aria-hidden="true" />

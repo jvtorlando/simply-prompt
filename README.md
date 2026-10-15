@@ -17,10 +17,13 @@ O produto principal é o **Personal IA**, que gera um prompt de treino para perd
 - **Personal IA completo**: formulário com 9 campos obrigatórios e 10 opcionais, validação amigável e prompt gerado na hora, com 10 seções (papel, contexto, objetivo, disponibilidade, limitações, regras, formato, progressão, segurança e perguntas de acompanhamento).
 - **Duas formas de usar**: "Personalizar no site" (formulário) ou "Deixar a IA perguntar" (prompt universal em que a IA entrevista você antes de montar o plano).
 - **Catálogo em pastas de vidro**: Fitness, Estudos, Carreira, Produtividade e Inglês. Abrir uma pasta e escolher um arquivo leva ao construtor com o modelo já selecionado e o foco no título.
-- **12 modelos experimentais** (plano de estudos, revisão para prova, explicador de matéria, currículo ATS, entrevista tech, LinkedIn, planejamento semanal, organização de tarefas, rotina personalizada, professor de inglês, conversação e correção de escrita), gerados a partir de configuração.
+- **12 modelos guiados** (plano de estudos, revisão para prova, explicador de matéria, currículo ATS, entrevista tech, LinkedIn, planejamento semanal, organização de tarefas, rotina personalizada, professor de inglês, conversação e correção de escrita). Cada um segue o mesmo esqueleto (papel, objetivo, contexto, método, regras, formato, verificação e perguntas de esclarecimento), baseado em guias de prompting da Anthropic, OpenAI e Google e em métodos de cada área (prática de recuperação e revisão espaçada, STAR, roteiro de system design, palavras-chave de ATS, níveis do CEFR, intenções "se-então").
+- **Vários objetivos no Personal IA**: escolha até 3, em ordem de prioridade; o prompt explica como conciliá-los.
+- **Conversor de texto mais inteligente**: corrige acentos, abreviações ("vc", "pq"), erros de digitação e pontuação nos textos digitados, sem alterar termos técnicos, nomes ou textos colados, e mostra o que foi ajustado. Cruza as respostas para incluir pontos de atenção (objetivos que competem, rotina apertada, idade, lesões e condições citadas em texto livre). Tudo no navegador, sem rede.
 - **Copiar prompt** com Clipboard API, alternativa para navegadores antigos e mensagem de erro com seleção automática do texto quando a cópia não é possível. Feedback anunciado via `aria-live`.
 - Contador aproximado de caracteres, botão "Limpar respostas" e estado vazio explicando o que falta.
 - Rascunho opcional do Personal IA salvo no navegador (somente preferências de treino), com opção de restaurar ou descartar.
+- Visual em vidro líquido, com lente deslizante nas seleções e fundo ambiente neutro. Fonte do sistema da Apple (SF Pro) nos aparelhos Apple e Inter nos demais.
 - Responsivo de 360 px a 1440 px, sem overflow horizontal, e acessível por teclado.
 
 ## Tecnologias

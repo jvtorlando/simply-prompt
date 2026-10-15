@@ -82,7 +82,7 @@ export function labelOf<T extends string>(options: Option<T>[], value: string): 
 }
 
 export const EMPTY_FITNESS_FORM: FitnessFormData = {
-  goal: "",
+  goals: [],
   age: "",
   height: "",
   weight: "",
@@ -109,7 +109,7 @@ export const EMPTY_FITNESS_FORM: FitnessFormData = {
  * sexo, sono, lesões e observações ficam de fora de propósito.
  */
 export const PERSISTED_FITNESS_FIELDS = [
-  "goal",
+  "goals",
   "level",
   "daysPerWeek",
   "sessionMinutes",

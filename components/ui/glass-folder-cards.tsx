@@ -660,10 +660,10 @@ export default function GlassFolder({
       if (e.key !== "Escape") return
       if (menuOpen) {
         setMenuOpen(false)
-        keyRef.current?.focus()
+        keyRef.current?.focus({ preventScroll: true })
       } else {
         setOpen(false)
-        hitRef.current?.focus()
+        hitRef.current?.focus({ preventScroll: true })
       }
     }
     const onDown = (e: PointerEvent) => {
@@ -904,7 +904,7 @@ export default function GlassFolder({
                   className={"gf-menu-item" + (item.danger ? " gf-menu-item--danger" : "")}
                   onClick={() => {
                     setMenuOpen(false)
-                    keyRef.current?.focus()
+                    keyRef.current?.focus({ preventScroll: true })
                     item.onSelect?.()
                   }}
                 >

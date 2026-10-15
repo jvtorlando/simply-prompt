@@ -65,7 +65,7 @@ function CategoryCard({ category, index, onSelect }: CategoryCardProps) {
       className={cn(
         "flex min-w-0 flex-col",
         featured
-          ? "glass overflow-hidden rounded-[2rem] bg-brand-coral-soft/40 md:col-span-2 md:grid md:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:col-span-3"
+          ? "glass overflow-hidden rounded-[2rem] md:col-span-2 md:grid md:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:col-span-3"
           : "border-t border-foreground pt-4",
       )}
     >
@@ -116,7 +116,7 @@ function CategoryCard({ category, index, onSelect }: CategoryCardProps) {
           >
             {category.title}
           </h3>
-          <span className="text-sm text-muted-foreground">{featured ? "Personal IA" : "experimental"}</span>
+          {featured ? <span className="text-sm text-muted-foreground">Personal IA</span> : null}
         </div>
         <p className="max-w-md text-sm leading-relaxed text-muted-foreground">{category.description}</p>
         <ul className="mt-auto" aria-label={`Prompts de ${category.title}`}>
@@ -148,8 +148,9 @@ export function PromptCatalog({ onSelect }: { onSelect: (item: CatalogItem) => v
         <Reveal>
         <SectionHeading
             id="catalogo-titulo"
-            title="Uma pasta para cada parte da rotina."
-            description="Abra uma pasta e escolha um arquivo. Fitness está completo; o resto é experimental, mas já funciona."
+            size="md"
+            title="Escolha o que criar."
+            description="Abra uma pasta, escolha um prompt e responda algumas perguntas. Ele já sai pronto para copiar."
           />
         </Reveal>
         <ul className="mt-12 grid gap-x-8 gap-y-14 md:grid-cols-2 lg:grid-cols-3">

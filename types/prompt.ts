@@ -17,13 +17,15 @@ export type TemplateField = {
   required?: boolean
   placeholder?: string
   hint?: string
+  /** Texto colado ou em outro idioma: entra no prompt exatamente como veio, sem correção. */
+  raw?: boolean
   options?: FieldOption[]
 }
 
 /** Valores preenchidos em um formulário genérico, indexados pelo id do campo. */
 export type TemplateValues = Record<string, string>
 
-/** Modelo de prompt experimental, descrito apenas por dados. */
+/** Modelo de prompt, descrito apenas por dados. O gerador monta as seções a partir dele. */
 export type PromptTemplate = {
   id: string
   categoryId: CategoryId
@@ -32,17 +34,23 @@ export type PromptTemplate = {
   /** Papel que a IA deve assumir. */
   role: string
   /** O que a IA deve produzir. */
-  task: string
+  objective: string
   fields: TemplateField[]
-  /** Regras específicas desse modelo. */
+  /** Como trabalhar: passos do método recomendado para o assunto. */
+  method: string[]
+  /** Regras específicas do assunto. */
   rules: string[]
-  /** Itens obrigatórios na resposta. */
+  /** Itens obrigatórios na resposta, em ordem. */
   outputFormat: string[]
+  /** Verificações que a IA faz antes de responder. */
+  checks: string[]
+  /** O que perguntar se faltar informação essencial. */
+  clarify: string[]
 }
 
 /**
  * Um item do catálogo. `kind: "fitness"` abre o Personal IA (com um objetivo
- * pré-selecionado); `kind: "template"` abre um modelo experimental.
+ * pré-selecionado); `kind: "template"` abre um modelo guiado.
  */
 export type CatalogItem =
   | { kind: "fitness"; id: string; title: string; meta: string; goal: FitnessGoal }
@@ -73,7 +81,8 @@ export type SleepQuality = "" | "ruim" | "regular" | "bom" | "otimo"
 export type DailyActivity = "" | "sedentario" | "leve" | "moderado" | "alto"
 
 export type FitnessFormData = {
-  goal: FitnessGoal | ""
+  /** Objetivos na ordem em que foram escolhidos: o primeiro é a prioridade. */
+  goals: FitnessGoal[]
   age: string
   height: string
   weight: string

@@ -1,21 +1,17 @@
 import type { Metadata, Viewport } from "next"
 import type { ReactNode } from "react"
-import { Bricolage_Grotesque, Geist_Mono, Instrument_Sans } from "next/font/google"
+import { Geist_Mono, Inter } from "next/font/google"
 import { AmbientBackground } from "@/components/ambient-background"
 import "./globals.css"
 
-// Títulos com personalidade, texto de leitura neutro e mono só para o texto do prompt.
-const display = Bricolage_Grotesque({
-  variable: "--font-display",
-  subsets: ["latin"],
-  axes: ["opsz"],
-})
-
-const text = Instrument_Sans({
-  variable: "--font-text",
+// A fonte da Apple (SF Pro) vem do sistema, pela pilha -apple-system; a licença não permite embuti-la.
+// Fora dos aparelhos Apple, o Inter (o mais próximo) assume.
+const inter = Inter({
+  variable: "--font-inter",
   subsets: ["latin"],
 })
 
+// Mono só para o texto do prompt.
 const mono = Geist_Mono({
   variable: "--font-mono-prompt",
   subsets: ["latin"],
@@ -55,7 +51,7 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: Readonly<{ children: ReactNode }>) {
   return (
-    <html lang="pt-BR" className={`${display.variable} ${text.variable} ${mono.variable} antialiased`}
+    <html lang="pt-BR" className={`${inter.variable} ${mono.variable} antialiased`}
       style={{ colorScheme: "light" }}>
       <body className="min-h-dvh text-foreground">
         <AmbientBackground />

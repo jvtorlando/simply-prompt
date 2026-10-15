@@ -1,5 +1,4 @@
 import { Reveal } from "@/components/reveal"
-import { SectionHeading, splitHeadingSticky, splitLayout } from "@/components/section-heading"
 
 const STEPS = [
   {
@@ -16,28 +15,23 @@ const STEPS = [
   },
 ]
 
+/** Faixa compacta logo abaixo do hero: o caminho inteiro em três passos, sem competir com o catálogo. */
 export function HowItWorks() {
   return (
-    <section id="como-funciona" aria-labelledby="como-funciona-titulo" className="py-20 sm:py-28">
-      <div className={`mx-auto max-w-6xl px-4 sm:px-6 ${splitLayout}`}>
-        <Reveal className={splitHeadingSticky}>
-          <SectionHeading id="como-funciona-titulo" size="md" title="Do zero ao prompt em três passos." />
-        </Reveal>
-
-        <ol>
+    <section id="como-funciona" aria-labelledby="como-funciona-titulo" className="py-14 sm:py-20">
+      <div className="mx-auto max-w-6xl px-4 sm:px-6">
+        <h2 id="como-funciona-titulo" className="sr-only">
+          Como funciona
+        </h2>
+        <ol className="grid gap-x-10 gap-y-8 md:grid-cols-3">
           {STEPS.map((step, i) => (
-            <li key={step.title} className="border-t border-foreground/15 py-7 first:border-t-0 first:pt-0">
-              <Reveal delay={i * 0.08} className="grid grid-cols-[3rem_minmax(0,1fr)] items-baseline gap-x-4">
-                <span
-                  aria-hidden="true"
-                  className="font-heading text-5xl leading-none font-semibold tracking-tighter text-brand-rust tabular-nums"
-                >
+            <li key={step.title} className="border-t border-foreground pt-4">
+              <Reveal delay={i * 0.08}>
+                <span aria-hidden="true" className="text-4xl leading-none font-semibold tracking-tighter text-brand-rust tabular-nums">
                   {i + 1}
                 </span>
-                <div>
-                  <h3 className="text-2xl font-semibold tracking-tight">{step.title}</h3>
-                  <p className="mt-2 max-w-md text-[15px] leading-relaxed text-muted-foreground">{step.text}</p>
-                </div>
+                <h3 className="mt-4 text-xl font-semibold tracking-tight">{step.title}</h3>
+                <p className="mt-2 max-w-xs text-[15px] leading-relaxed text-muted-foreground">{step.text}</p>
               </Reveal>
             </li>
           ))}

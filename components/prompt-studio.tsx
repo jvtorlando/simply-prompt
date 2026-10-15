@@ -96,7 +96,7 @@ export function PromptStudio() {
   const handleCatalogSelect = (item: CatalogItem) => {
     if (item.kind === "fitness") {
       setSelection({ kind: "fitness" })
-      edit((current) => ({ ...current, goal: item.goal }))
+      edit((current) => ({ ...current, goals: [item.goal] }))
     } else {
       setSelection({ kind: "template", templateId: item.templateId })
     }

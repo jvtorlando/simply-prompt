@@ -2,9 +2,9 @@
 
 import { useId, useState } from "react"
 
+import { LensChoice } from "@/components/lens-choice"
 import { GOAL_OPTIONS } from "@/lib/fitness-options"
 import { GOAL_FOCUS } from "@/lib/prompt-builders"
-import { cn } from "@/lib/utils"
 import type { FitnessGoal } from "@/types/prompt"
 
 const DEMO_GOALS = GOAL_OPTIONS.filter((o) => o.value !== "saude")
@@ -26,27 +26,13 @@ export function HeroDemo() {
     <figure className="glass mx-auto w-full max-w-md rounded-[2rem] p-5 sm:p-6" aria-label="Exemplo: o prompt muda conforme o objetivo">
       <fieldset>
         <legend className="text-sm font-medium">Escolha um objetivo e veja o prompt mudar</legend>
-        <div className="mt-3 flex flex-wrap gap-2">
-          {DEMO_GOALS.map((option) => (
-            <label
-              key={option.value}
-              className={cn(
-                "flex min-h-11 cursor-pointer items-center rounded-full border border-foreground/20 bg-white/40 px-4 text-sm transition-[background-color,color,border-color,transform] duration-300 select-none hover:border-foreground active:scale-95",
-                "has-checked:border-foreground has-checked:bg-foreground has-checked:text-background has-focus-visible:ring-3 has-focus-visible:ring-ring/50",
-              )}
-            >
-              <input
-                type="radio"
-                name={name}
-                value={option.value}
-                checked={goal === option.value}
-                onChange={() => setGoal(option.value as FitnessGoal)}
-                className="sr-only"
-              />
-              {option.label}
-            </label>
-          ))}
-        </div>
+        <LensChoice
+          className="mt-3"
+          name={name}
+          value={goal}
+          onChange={(next) => setGoal(next as FitnessGoal)}
+          options={DEMO_GOALS}
+        />
       </fieldset>
 
       <dl className="mt-6 border-t border-foreground/80">

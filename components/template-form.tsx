@@ -1,6 +1,6 @@
 "use client"
 
-import { FieldShell, NativeSelect, controlClass, describedBy } from "@/components/form-controls"
+import { FieldShell, SelectField, controlClass, describedBy } from "@/components/form-controls"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import type { PromptTemplate, TemplateValues, ValidationErrors } from "@/types/prompt"
@@ -15,7 +15,7 @@ type TemplateFormProps = {
   onBlur: (fieldId: string) => void
 }
 
-/** Formulário gerado a partir da configuração de um modelo experimental. */
+/** Formulário gerado a partir da configuração de um modelo guiado. */
 export function TemplateForm({ template, values, errors, onChange, onBlur }: TemplateFormProps) {
   return (
     <div className="grid gap-5">
@@ -37,7 +37,7 @@ export function TemplateForm({ template, values, errors, onChange, onBlur }: Tem
         return (
           <FieldShell key={field.id} id={id} label={field.label} required={field.required} hint={field.hint} error={error}>
             {field.kind === "select" ? (
-              <NativeSelect
+              <SelectField
                 id={id}
                 value={value}
                 onChange={(v) => onChange(field.id, v)}

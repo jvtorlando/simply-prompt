@@ -3,8 +3,10 @@
 import type { ChangeEvent, ReactNode } from "react"
 import { Info } from "lucide-react"
 
-import { ChoiceGroup, FieldError, FieldShell, NativeSelect, RequiredMark, controlClass, describedBy } from "@/components/form-controls"
+import { ChoiceGroup, FieldError, FieldShell, SelectField, RequiredMark, controlClass, describedBy } from "@/components/form-controls"
+import { LensMulti } from "@/components/lens-choice"
 import { Input } from "@/components/ui/input"
+import { MAX_GOALS } from "@/lib/fitness-prompt"
 import { Textarea } from "@/components/ui/textarea"
 import {
   ACTIVITY_OPTIONS,
@@ -72,17 +74,26 @@ export function FitnessForm({ data, errors, onChange, onBlur }: FitnessFormProps
 
   return (
     <div className="flex flex-col gap-8">
-      <Group title="Objetivo">
-        <ChoiceGroup
-          id={fitnessFieldId("goal")}
-          name="goal"
-          legend="Objetivo principal"
-          value={data.goal}
-          onChange={(v) => onChange("goal", v as FitnessFormData["goal"])}
-          options={GOAL_OPTIONS}
-          error={errors.goal}
-          columns="grid-cols-1 sm:grid-cols-2"
-        />
+      <Group title="Objetivo" description="Você pode combinar até 3. O primeiro que marcar é a prioridade do plano.">
+        <fieldset
+          aria-describedby={errors.goals ? `${fitnessFieldId("goals")}-error` : undefined}
+          className="flex min-w-0 flex-col gap-2"
+        >
+          <legend className="mb-2 flex items-center gap-2 text-sm leading-snug font-medium">
+            Objetivos
+            <RequiredMark />
+          </legend>
+          <LensMulti
+            name="goals"
+            values={data.goals}
+            onChange={(next) => onChange("goals", next as FitnessFormData["goals"])}
+            options={GOAL_OPTIONS}
+            firstId={fitnessFieldId("goals")}
+            max={MAX_GOALS}
+            invalid={!!errors.goals}
+          />
+          <FieldError id={`${fitnessFieldId("goals")}-error`} message={errors.goals} />
+        </fieldset>
       </Group>
 
       <Group title="Sobre você" description="Usado apenas para ajustar volume e intensidade. Não pedimos nome, e-mail ou telefone.">
@@ -105,15 +116,15 @@ export function FitnessForm({ data, errors, onChange, onBlur }: FitnessFormProps
           onChange={(v) => onChange("level", v as FitnessFormData["level"])}
           options={LEVEL_OPTIONS}
           error={errors.level}
-          columns="grid-cols-1 min-[400px]:grid-cols-3"
+          
         />
         <FieldShell id={fitnessFieldId("sex")} label="Sexo">
-          <NativeSelect
+          <SelectField
             id={fitnessFieldId("sex")}
             value={data.sex}
             onChange={(v) => onChange("sex", v as FitnessFormData["sex"])}
             options={SEX_OPTIONS}
-            placeholder="Não informado"
+            clearLabel="Não informado"
           />
         </FieldShell>
       </Group>
@@ -127,7 +138,7 @@ export function FitnessForm({ data, errors, onChange, onBlur }: FitnessFormProps
           onChange={(v) => onChange("daysPerWeek", v)}
           options={DAYS_OPTIONS}
           error={errors.daysPerWeek}
-          columns="grid-cols-3 sm:grid-cols-5"
+          
         />
         <ChoiceGroup
           id={fitnessFieldId("sessionMinutes")}
@@ -137,7 +148,7 @@ export function FitnessForm({ data, errors, onChange, onBlur }: FitnessFormProps
           onChange={(v) => onChange("sessionMinutes", v)}
           options={DURATION_OPTIONS}
           error={errors.sessionMinutes}
-          columns="grid-cols-3 sm:grid-cols-5"
+          
         />
         <FieldShell
           id={fitnessFieldId("scheduleConstraints")}
@@ -149,7 +160,7 @@ export function FitnessForm({ data, errors, onChange, onBlur }: FitnessFormProps
 
       <Group title="Local e equipamentos">
         <FieldShell id={fitnessFieldId("location")} label="Local de treino" required error={errors.location}>
-          <NativeSelect
+          <SelectField
             id={fitnessFieldId("location")}
             value={data.location}
             onChange={(v) => onChange("location", v as FitnessFormData["location"])}
@@ -214,21 +225,21 @@ export function FitnessForm({ data, errors, onChange, onBlur }: FitnessFormProps
             <Input {...text("dislikedExercises")} className={controlClass} placeholder="Ex.: burpee, esteira…" />
           </FieldShell>
           <FieldShell id={fitnessFieldId("sleep")} label="Qualidade atual do sono">
-            <NativeSelect
+            <SelectField
               id={fitnessFieldId("sleep")}
               value={data.sleep}
               onChange={(v) => onChange("sleep", v as FitnessFormData["sleep"])}
               options={SLEEP_OPTIONS}
-              placeholder="Não informado"
+              clearLabel="Não informado"
             />
           </FieldShell>
           <FieldShell id={fitnessFieldId("dailyActivity")} label="Nível de atividade diária">
-            <NativeSelect
+            <SelectField
               id={fitnessFieldId("dailyActivity")}
               value={data.dailyActivity}
               onChange={(v) => onChange("dailyActivity", v as FitnessFormData["dailyActivity"])}
               options={ACTIVITY_OPTIONS}
-              placeholder="Não informado"
+              clearLabel="Não informado"
             />
           </FieldShell>
         </div>

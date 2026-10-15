@@ -68,7 +68,7 @@ function Tab({ href, children, highlighted, onActivate }: TabProps) {
         href={href}
         className={cn(
           "block rounded-full px-4 py-2 text-sm font-medium transition-colors duration-200 outline-none focus-visible:ring-2 focus-visible:ring-ring",
-          highlighted ? "text-background" : "text-foreground",
+          highlighted ? "text-foreground" : "text-foreground/70",
         )}
       >
         {children}
@@ -85,7 +85,7 @@ function Cursor({ position }: { position: CursorPosition }) {
       initial={false}
       animate={position}
       transition={reduceMotion ? { duration: 0 } : { type: "spring", stiffness: 420, damping: 30 }}
-      className="absolute top-1 z-0 rounded-full bg-foreground shadow-[0_6px_16px_-6px_rgb(0_0_0/0.5)]"
+      className="lens absolute top-1 z-0 rounded-full"
     />
   )
 }
