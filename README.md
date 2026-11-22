@@ -8,17 +8,13 @@ O produto principal é o **Personal IA**, que gera um prompt de treino para perd
 
 > **Aplicação:** https://p0-green.vercel.app
 
-## Screenshot
-
-> 📸 _Espaço reservado para o screenshot da página inicial (`public/screenshot.png`)._
-
 ## Funcionalidades
 
-- **Personal IA completo**: formulário com 9 campos obrigatórios e 10 opcionais, validação amigável e prompt gerado na hora, com 10 seções (papel, contexto, objetivo, disponibilidade, limitações, regras, formato, progressão, segurança e perguntas de acompanhamento).
-- **Duas formas de usar**: "Personalizar no site" (formulário) ou "Contar com minhas palavras" (texto livre de até 3.000 caracteres). No texto livre, o site lê a história no navegador, mostra o que entendeu, pede só o que faltou (dias, tempo, local, lesões, altura ambígua) e entrega um prompt pronto para as instruções de um Projeto no Claude ou no ChatGPT, com até 6.000 caracteres.
-- **Sem IA no site, de propósito**: a leitura do texto livre é feita por regras, sem rede e sem API paga. Ela reconhece números (idade, altura, peso, metas e prazos), esportes, objetivos, grupos musculares, suplementos, dias, tempo, local e menções a dor ou lesão. O que não reconhece entra no prompt em "Outros detalhes que contei", para a IA do projeto interpretar. Testado com os dois textos de exemplo da especificação do Personal Trainer.
-- **Catálogo em pastas de vidro**: Fitness, Estudos, Carreira, Produtividade e Inglês. Abrir uma pasta e escolher um arquivo leva ao construtor com o modelo já selecionado e o foco no título.
-- **12 modelos guiados** (plano de estudos, revisão para prova, explicador de matéria, currículo ATS, entrevista tech, LinkedIn, planejamento semanal, organização de tarefas, rotina personalizada, professor de inglês, conversação e correção de escrita). Cada um segue o mesmo esqueleto (papel, objetivo, contexto, método, regras, formato, verificação e perguntas de esclarecimento), baseado em guias de prompting da Anthropic, OpenAI e Google e em métodos de cada área (prática de recuperação e revisão espaçada, STAR, roteiro de system design, palavras-chave de ATS, níveis do CEFR, intenções "se-então").
+- **Personal IA completo**: formulário com 9 campos obrigatórios e 11 opcionais, validação amigável e prompt gerado na hora, com 10 seções (papel, contexto, objetivo, disponibilidade, limitações, regras, formato, progressão, segurança e perguntas de acompanhamento). O prompt também orienta a IA a perguntar se pode usar o Google Calendar para encaixar os treinos, entregar o plano em PDF e pedir um retorno semanal ou mensal para readaptar o plano.
+- **Duas formas de usar**: "Personalizar no site" (formulário) ou "Contar com minhas palavras" (texto livre de até 3.000 caracteres), no Personal IA e nos modelos guiados. No Personal IA, o site lê a história no navegador, mostra o que entendeu, pede só o que faltou (dias, tempo, local, lesões, altura ambígua) e entrega um prompt pronto para as instruções de um Projeto no Claude ou no ChatGPT, com até 6.000 caracteres.
+- **Sem IA no site, de propósito**: a leitura do texto livre é feita por regras, sem rede e sem API paga. Ela reconhece números (idade, altura, peso, metas e prazos), esportes, objetivos, grupos musculares, suplementos, dias, tempo, local e menções a dor ou lesão. O que não reconhece entra no prompt em "Outros detalhes que contei", para a IA do projeto interpretar.
+- **Catálogo em pastas de vidro**: Fitness, Estudos, Carreira, Produtividade e Línguas. Abrir uma pasta e escolher um arquivo leva ao construtor com o modelo já selecionado e o foco no título.
+- **12 modelos guiados** (plano de estudos, revisão para prova, explicador de matéria, currículo ATS, entrevista tech, LinkedIn, planejamento semanal, organização de tarefas, rotina personalizada, professor particular, conversação e correção de escrita; os três de línguas funcionam com inglês, espanhol, francês, italiano, alemão, japonês ou mandarim). Cada um segue o mesmo esqueleto (papel, objetivo, contexto, método, regras, formato, verificação e perguntas de esclarecimento), baseado em guias de prompting da Anthropic, OpenAI e Google e em métodos de cada área (prática de recuperação e revisão espaçada, STAR, roteiro de system design, palavras-chave de ATS, níveis do CEFR, intenções "se-então").
 - **Vários objetivos no Personal IA**: escolha até 3, em ordem de prioridade; o prompt explica como conciliá-los.
 - **Conversor de texto mais inteligente**: corrige acentos, abreviações ("vc", "pq"), erros de digitação e pontuação nos textos digitados, sem alterar termos técnicos, nomes ou textos colados, e mostra o que foi ajustado. Cruza as respostas para incluir pontos de atenção (objetivos que competem, rotina apertada, idade, lesões e condições citadas em texto livre). Tudo no navegador, sem rede.
 - **Copiar prompt** com Clipboard API, alternativa para navegadores antigos e mensagem de erro com seleção automática do texto quando a cópia não é possível. Feedback anunciado via `aria-live`.
@@ -42,7 +38,7 @@ Sem backend, banco de dados, autenticação, APIs pagas, analytics, cookies ou r
 Requer Node.js 20.9 ou superior e npm.
 
 ```bash
-git clone https://github.com/<seu-usuario>/simply-prompt.git
+git clone https://github.com/jvtorlando/simply-prompt.git
 cd simply-prompt
 npm install
 ```
