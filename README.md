@@ -71,28 +71,40 @@ app/
   layout.tsx            metadados, fontes e idioma pt-BR
   page.tsx              composição da landing page
   globals.css           tema (tokens de cor), fundo pontilhado e animações
-  icon.svg              favicon
+  icon.png              favicon (e apple-icon.png)
   opengraph-image.tsx   imagem Open Graph gerada no build
 components/
   site-header.tsx       header e marca
   mobile-nav.tsx        menu mobile (Sheet)
-  hero-section.tsx      hero com demonstração resposta → prompt
+  ambient-background.tsx manchas de cor fixas atrás do vidro
+  hero-section.tsx      hero
+  hero-demo.tsx         demonstração ao vivo resposta → prompt
   how-it-works.tsx      três etapas
   prompt-studio.tsx     liga catálogo e construtor; rascunho no localStorage
   prompt-catalog.tsx    catálogo com as pastas de vidro
   prompt-builder.tsx    construtor com as abas
   fitness-form.tsx      formulário do Personal IA
   template-form.tsx     formulário genérico orientado por configuração
+  story-panels.tsx      modo "Contar com minhas palavras" (Personal IA e modelos)
   form-controls.tsx     campo, select nativo, grupo de escolhas, erros
+  lens-choice.tsx       grupo de opções com lente de vidro deslizante
   prompt-output.tsx     visualização, cópia e limpeza do prompt
   benefits-section.tsx  benefícios
   faq-section.tsx       perguntas frequentes
+  section-heading.tsx   título de seção e layout em duas colunas
+  reveal.tsx            animação de entrada (respeita movimento reduzido)
   site-footer.tsx       rodapé com ano dinâmico
-  ui/                   componentes reutilizáveis (shadcn/ui e glass-folder-cards)
+  ui/                   componentes reutilizáveis (shadcn/ui, nav-header e glass-folder-cards)
 lib/
-  prompt-builders.ts    funções puras: validação e geração dos prompts
-  prompt-catalog.ts     categorias e modelos experimentais (dados)
+  prompt-builders.ts    ponto de entrada: validação e geração dos prompts dos modelos
+  prompt-templates.ts   os 12 modelos guiados (dados)
+  prompt-catalog.ts     categorias do catálogo
+  prompt-utils.ts       helpers de texto (listas, datas)
+  fitness-prompt.ts     validação, análise e prompt do Personal IA (formulário)
+  story-fitness.ts      leitura do texto livre e prompt do Personal IA (modo história)
+  fitness-routine.ts    passos de agenda, PDF e retorno semanal/mensal
   fitness-options.ts    opções do formulário do Personal IA
+  text-intelligence.ts  correção de português, números e sinais de saúde, no navegador
   site-config.ts        URL do GitHub exibida no rodapé
   utils.ts              helper `cn`
 types/
@@ -103,8 +115,8 @@ types/
 
 - **`components/ui`**: mantém compatibilidade com o padrão do shadcn/ui (`components.json` aponta para `@/components/ui`) e facilita imports consistentes via alias `@/*`. O componente `glass-folder-cards.tsx` fica no mesmo diretório.
 - **Server Components por padrão**: header, hero, seções estáticas e rodapé são renderizados no servidor. Somente o que tem estado ou usa APIs do navegador é Client Component (`prompt-studio`, formulários, saída do prompt, menu mobile e as pastas).
-- **Geração separada da interface**: `buildFitnessPrompt`, `buildTemplatePrompt`, `buildTemplateInterviewPrompt`, `validateFitness` e `validateTemplate` são funções puras em `lib/prompt-builders.ts`, fáceis de testar.
-- **Modelos experimentais por configuração**: cada modelo é um objeto em `lib/prompt-catalog.ts` (campos, papel, regras e formato). Um único formulário e um único gerador atendem todos.
+- **Geração separada da interface**: `buildFitnessPrompt`, `buildTemplatePrompt`, `buildTemplateStoryPrompt`, `buildStoryFitnessPrompt`, `validateFitness` e `validateTemplate` são funções puras em `lib/`, exportadas por `lib/prompt-builders.ts` e fáceis de testar.
+- **Modelos por configuração**: cada modelo é um objeto em `lib/prompt-templates.ts` (campos, papel, regras e formato). Um único formulário e um único gerador atendem todos.
 - **Select nativo**: escolhido para melhor experiência no celular e em leitores de tela.
 - **Rascunho sem erro de hidratação**: o `localStorage` é lido com `useSyncExternalStore` (no servidor o valor é `null`). Idade, medidas, sexo, sono, lesões e observações nunca são salvos.
 - **Ano do rodapé**: calculado no servidor com `"use cache"` e `cacheLife("days")`, compatível com Cache Components.
@@ -120,6 +132,6 @@ types/
 ## Como contribuir
 
 1. Faça um fork e crie uma branch: `git checkout -b feat/minha-melhoria`.
-2. Para um novo modelo de prompt, adicione um objeto em `PROMPT_TEMPLATES` e um item na categoria correspondente em `PROMPT_CATEGORIES` (`lib/prompt-catalog.ts`).
+2. Para um novo modelo de prompt, adicione um objeto em `PROMPT_TEMPLATES` (`lib/prompt-templates.ts`) e um item na categoria correspondente em `PROMPT_CATEGORIES` (`lib/prompt-catalog.ts`).
 3. Rode `npm run lint`, `npm run typecheck` e `npm run build` antes de abrir o pull request.
 4. Descreva a mudança e, se alterar a interface, inclua screenshots em 390 px e 1440 px.
